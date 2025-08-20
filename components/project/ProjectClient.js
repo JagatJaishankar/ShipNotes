@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import CommitSelector from "./CommitSelector";
+import WidgetGenerator from "./WidgetGenerator";
 
 export default function ProjectClient({ project, session }) {
   const [commits, setCommits] = useState([]);
@@ -10,11 +11,23 @@ export default function ProjectClient({ project, session }) {
   const [isLoadingCommits, setIsLoadingCommits] = useState(false);
   const [dateRange, setDateRange] = useState(30); // Default: last 30 days
   const [isGenerating, setIsGenerating] = useState(false);
+  const [hasPublishedNotes, setHasPublishedNotes] = useState(false);
 
-  // Fetch commits when component mounts
+  // Fetch commits and check for published notes when component mounts
   useEffect(() => {
     fetchCommits();
+    checkPublishedNotes();
   }, [dateRange]);
+
+  const checkPublishedNotes = async () => {
+    try {
+      const response = await axios.get(`/api/widget/${project.projectSlug}`);
+      setHasPublishedNotes(response.data.stats.totalUpdates > 0);
+    } catch (error) {
+      // If API returns 404 or error, assume no published notes
+      setHasPublishedNotes(false);
+    }
+  };
 
   const fetchCommits = async () => {
     setIsLoadingCommits(true);
@@ -146,15 +159,11 @@ export default function ProjectClient({ project, session }) {
         />
       </div>
 
-      {/* Widget Section - Placeholder for later */}
-      <div className="border border-neutral rounded-sm p-4">
-        <h2 className="font-raleway font-bold text-xl tracking-tighter mb-4">
-          widget integration
-        </h2>
-        <p className="font-lora tracking-tighter opacity-80 text-neutral">
-          widget code will be available here after publishing your first release note.
-        </p>
-      </div>
+      {/* Widget Integration */}
+      <WidgetGenerator 
+        project={project} 
+        hasPublishedNotes={hasPublishedNotes}
+      />
     </div>
   );
 }

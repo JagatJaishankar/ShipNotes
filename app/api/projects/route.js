@@ -23,6 +23,14 @@ export async function POST(request) {
       );
     }
 
+    // Validate project name for URL safety
+    if (!/^[a-zA-Z0-9\s\-_]+$/.test(projectName)) {
+      return Response.json(
+        { error: "Project name can only contain letters, numbers, spaces, hyphens, and underscores" },
+        { status: 400 }
+      );
+    }
+
     // Connect to database
     await connectMongo();
 
@@ -37,7 +45,7 @@ export async function POST(request) {
     const existingProject = await Project.findOne({ projectSlug });
     if (existingProject) {
       return Response.json(
-        { error: "A project with this name already exists" },
+        { error: "Project name already taken. Please choose a different name." },
         { status: 409 }
       );
     }

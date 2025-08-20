@@ -44,6 +44,12 @@ export default function CreateProjectModal({ isOpen, onClose, onProjectCreated }
       return;
     }
 
+    // Validate project name for URL safety
+    if (!/^[a-zA-Z0-9\s\-_]+$/.test(projectName.trim())) {
+      alert("Project name can only contain letters, numbers, spaces, hyphens, and underscores");
+      return;
+    }
+
     setIsCreating(true);
     try {
       const response = await axios.post("/api/projects", {
@@ -60,7 +66,7 @@ export default function CreateProjectModal({ isOpen, onClose, onProjectCreated }
 
       // Reset form and close modal
       handleClose();
-      alert("Project created successfully!");
+      alert(response.data.message || "Project created successfully!");
     } catch (error) {
       console.error("❌ Error creating project:", error);
       const errorMessage = error.response?.data?.error || "Failed to create project";
@@ -174,6 +180,29 @@ export default function CreateProjectModal({ isOpen, onClose, onProjectCreated }
                 placeholder="my awesome project"
                 required
               />
+              {projectName && (
+                <div className="mt-2 p-2 bg-base-200 rounded border">
+                  {/^[a-zA-Z0-9\s\-_]+$/.test(projectName) ? (
+                    <div>
+                      <p className="font-space tracking-tighter text-sm opacity-60">
+                        URL preview: patchnote.dev/{projectName.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "")}
+                      </p>
+                      <p className="font-space tracking-tighter text-xs opacity-50 mt-1">
+                        ✓ valid project name
+                      </p>
+                    </div>
+                  ) : (
+                    <div>
+                      <p className="font-space tracking-tighter text-sm text-error">
+                        ❌ Invalid characters detected
+                      </p>
+                      <p className="font-space tracking-tighter text-xs opacity-50 mt-1">
+                        only letters, numbers, spaces, hyphens, and underscores allowed
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             <div>
@@ -202,7 +231,7 @@ export default function CreateProjectModal({ isOpen, onClose, onProjectCreated }
               <button
                 onClick={handleCreateProject}
                 className="btn btn-primary font-raleway font-bold tracking-tighter"
-                disabled={isCreating || !projectName.trim()}
+                disabled={isCreating || !projectName.trim() || !/^[a-zA-Z0-9\s\-_]+$/.test(projectName.trim())}
               >
                 {isCreating ? (
                   <>
