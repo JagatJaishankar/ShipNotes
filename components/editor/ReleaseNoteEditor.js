@@ -84,9 +84,15 @@ export default function ReleaseNoteEditor({ patchNote, project, session }) {
       });
 
       if (response.data.success) {
+        // Wait a moment to ensure database is updated
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
         alert("Release notes published successfully!");
-        // Redirect to project page or changelog
-        window.location.href = `/${project.projectSlug}`;
+        
+        // Wait another moment before redirect to ensure alert is processed
+        setTimeout(() => {
+          window.location.href = `/${project.projectSlug}`;
+        }, 100);
       }
     } catch (error) {
       console.error("❌ Error publishing release notes:", error);
