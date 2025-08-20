@@ -29,6 +29,16 @@ export default function RootLayout({ children }) {
         className={`${lora.variable} ${raleway.variable} ${space.variable} antialiased`}
       >
         {children}
+        {/* ShipNotes.dev Widget */}
+        <script
+          src="https://shipnotes.dev/widget.js"
+          data-shipnotes-project="shipnotes"
+          data-position="bottom-right"
+          data-theme="light"
+          data-show-count="true"
+          data-days="30"
+          async
+        ></script>
       </body>
     </html>
   );
