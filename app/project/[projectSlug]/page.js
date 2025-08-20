@@ -13,10 +13,13 @@ export default async function ProjectPage({ params }) {
     redirect("/auth");
   }
 
+  // Await params in Next.js 15
+  const { projectSlug } = await params;
+
   // Connect to database and fetch project
   await connectMongo();
   const project = await Project.findOne({ 
-    projectSlug: params.projectSlug,
+    projectSlug: projectSlug,
     userId: session.user.id 
   }).lean();
 

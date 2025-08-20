@@ -1,6 +1,7 @@
 // OpenAI API route for generating release notes from GitHub commits
 import { NextResponse } from "next/server";
-import { auth } from "@/auth";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../auth/[...nextauth]/route";
 import connectMongo from "@/lib/mongoose";
 import User from "@/models/User";
 import Project from "@/models/Project";
@@ -14,8 +15,8 @@ const openai = new OpenAI({
 export async function POST(request) {
   try {
     // Check authentication
-    const session = await auth();
-    if (!session?.user) {
+    const session = await getServerSession(authOptions);
+    if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -33,7 +34,7 @@ export async function POST(request) {
     await connectMongo();
 
     // Find user and check credits
-    const user = await User.findById(session.user.id);
+    const user = await User.findOne({ githubUserId: session.user.githubUserId });
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
@@ -54,11 +55,11 @@ export async function POST(request) {
 
     // Format commits for OpenAI prompt
     const commitData = selectedCommits.map(commit => ({
-      message: commit.message,
-      author: commit.author.name,
-      date: commit.author.date,
+      message: commit.commit.message,
+      author: commit.commit.author.name,
+      date: commit.commit.author.date,
       sha: commit.sha.substring(0, 7),
-      stats: commit.stats ? `+${commit.stats.additions || 0}/-${commit.stats.deletions || 0}` : "N/A"
+      files: commit.files ? commit.files.map(f => f.filename).join(", ") : "N/A"
     }));
 
     // Create OpenAI prompt
@@ -72,7 +73,7 @@ Total Commits: ${commitData.length}
 
 COMMIT DATA:
 ${commitData.map(commit => 
-  `• ${commit.message} (${commit.author} - ${commit.sha})\n  Changes: ${commit.stats}`
+  `• ${commit.message} (${commit.author} - ${commit.sha})\n  Files: ${commit.files}`
 ).join('\n')}
 
 REQUIREMENTS:
