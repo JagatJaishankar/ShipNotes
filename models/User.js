@@ -41,8 +41,6 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
-// Index for faster lookups
-UserSchema.index({ githubUserId: 1 });
-UserSchema.index({ githubUsername: 1 });
+// Indexes are automatically created by unique: true fields
 
 export default mongoose.models.User || mongoose.model("User", UserSchema);

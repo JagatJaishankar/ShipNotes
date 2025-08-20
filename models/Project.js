@@ -45,7 +45,6 @@ const ProjectSchema = new mongoose.Schema(
 
 // Indexes for faster lookups
 ProjectSchema.index({ userId: 1 });
-ProjectSchema.index({ projectSlug: 1 });
 ProjectSchema.index({ repository: 1 });
 
 // Ensure one project per repository per user
