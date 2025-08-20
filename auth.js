@@ -1,41 +1,85 @@
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
-import { MongoDBAdapter } from "@auth/mongodb-adapter";
-import clientPromise from "./libs/mongo.js";
+import connectMongo from "./lib/mongoose.js";
+import User from "./models/User.js";
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     GitHub({
       clientId: process.env.AUTH_GITHUB_ID,
       clientSecret: process.env.AUTH_GITHUB_SECRET,
       authorization: {
         params: {
-          scope: "read:user user:email repo", // Access to repositories and user info
-        },
-      },
+          scope: "user:email repo" // Access to user email and repositories
+        }
+      }
     }),
   ],
-  adapter: MongoDBAdapter(clientPromise),
   callbacks: {
-    async session({ session, user, token }) {
-      // Add user ID to session for easy access
-      if (session?.user) {
-        session.user.id = user.id;
+    async session({ session, token }) {
+      // Add user ID and GitHub data to session from token
+      if (token?.sub) {
+        session.user.id = token.sub;
+        session.githubAccessToken = token.githubAccessToken;
+        session.githubUsername = token.githubUsername;
       }
       return session;
     },
     async jwt({ token, account, profile }) {
-      // Store GitHub access token in JWT for API calls
-      if (account?.provider === "github") {
+      // Store the OAuth account ID and profile data in the token
+      if (account && profile) {
+        token.githubId = account.providerAccountId;
+        token.githubUsername = profile.login;
         token.githubAccessToken = account.access_token;
-        token.githubUsername = profile?.login;
-        token.githubUserId = profile?.id;
-        token.githubProfilePicture = profile?.avatar_url;
       }
       return token;
     },
+    async signIn({ user, account, profile }) {
+      if (account.provider === "github") {
+        try {
+          // Connect to MongoDB to save/update user data
+          await connectMongo();
+          
+          // Find or create user with GitHub data - STORING ACCESS TOKEN IN DATABASE
+          const userData = await User.findOneAndUpdate(
+            { 
+              $or: [
+                { email: profile.email || user.email },
+                { githubUserId: account.providerAccountId }
+              ]
+            },
+            {
+              githubUsername: profile.login,
+              githubUserId: account.providerAccountId,
+              githubAccessToken: account.access_token, // ✅ STORED IN DATABASE
+              githubProfilePicture: profile.avatar_url,
+              email: profile.email || user.email,
+              updatedAt: new Date()
+            },
+            { 
+              upsert: true, 
+              new: true,
+              setDefaultsOnInsert: true 
+            }
+          );
+
+          // Add the user's database ID to the user object
+          user.id = userData._id.toString();
+          
+          console.log("✅ User synced to custom User model:", profile.login);
+        } catch (error) {
+          console.error("❌ Error saving user data:", error);
+          // Continue with sign in even if database save fails
+        }
+      }
+      return true;
+    }
   },
+  session: { strategy: "jwt" },
+  secret: process.env.NEXTAUTH_SECRET, // Ensure JWT encryption works properly
+  debug: process.env.NODE_ENV === "development",
   pages: {
-    signIn: "/auth", // Custom sign-in page
-  },
+    signIn: "/auth",
+    error: "/auth"
+  }
 });
