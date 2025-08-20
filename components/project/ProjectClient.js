@@ -13,12 +13,6 @@ export default function ProjectClient({ project, session }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [hasPublishedNotes, setHasPublishedNotes] = useState(false);
 
-  // Fetch commits and check for published notes when component mounts
-  useEffect(() => {
-    fetchCommits();
-    checkPublishedNotes();
-  }, [dateRange, fetchCommits, checkPublishedNotes]);
-
   const checkPublishedNotes = useCallback(async () => {
     try {
       const response = await axios.get(`/api/widget/${project.projectSlug}`);
@@ -51,6 +45,12 @@ export default function ProjectClient({ project, session }) {
       setIsLoadingCommits(false);
     }
   }, [dateRange, project.repository]);
+
+  // Fetch commits and check for published notes when component mounts
+  useEffect(() => {
+    fetchCommits();
+    checkPublishedNotes();
+  }, [dateRange, fetchCommits, checkPublishedNotes]);
 
   const handleCommitToggle = (commit) => {
     setSelectedCommits(prev => {
