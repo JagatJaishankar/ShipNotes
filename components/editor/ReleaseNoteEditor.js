@@ -13,14 +13,31 @@ export default function ReleaseNoteEditor({ patchNote, project, session }) {
 
   // Auto-save functionality
   useEffect(() => {
-    const autoSaveTimer = setTimeout(() => {
+    const autoSaveTimer = setTimeout(async () => {
       if (content !== patchNote.content || title !== patchNote.title) {
-        handleSave(false); // Save as draft without showing success message
+        if (isSaving) return;
+        
+        setIsSaving(true);
+        try {
+          const response = await axios.put(`/api/patch-notes/${patchNote._id}`, {
+            title,
+            content,
+            status: 'draft'
+          });
+
+          if (response.data.success) {
+            setLastSaved(new Date());
+          }
+        } catch (error) {
+          console.error("❌ Error auto-saving draft:", error);
+        } finally {
+          setIsSaving(false);
+        }
       }
     }, 3000); // Auto-save after 3 seconds of inactivity
 
     return () => clearTimeout(autoSaveTimer);
-  }, [content, title, handleSave, patchNote.content, patchNote.title]);
+  }, [content, title, patchNote.content, patchNote.title, patchNote._id, isSaving]);
 
   const handleSave = useCallback(async (showMessage = true) => {
     if (isSaving) return;
