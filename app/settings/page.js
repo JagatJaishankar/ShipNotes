@@ -119,7 +119,7 @@ export default async function SettingsPage() {
             {!user.isProUser && user.credits <= 5 && (
               <div className="mt-4 p-4 bg-warning/10 rounded border border-warning/20">
                 <p className="font-lora tracking-tighter text-warning mb-2">
-                  you're running low on credits!
+                  you&apos;re running low on credits!
                 </p>
                 <a
                   href="mailto:support@shipnotes.dev?subject=Request Credits"

@@ -1,6 +1,7 @@
 "use client";
 // Widget generator component for project page - generates embed code for customers
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 export default function WidgetGenerator({ project, hasPublishedNotes }) {
   const [config, setConfig] = useState({
@@ -276,7 +277,7 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
           </h3>
           <div className="space-y-2 font-lora tracking-tighter opacity-80 text-neutral text-sm">
             <p>• widget api: <code className="font-space bg-base-200 px-1 rounded">GET /api/widget/{project.projectSlug}</code></p>
-            <p>• public changelog: <a href={`/${project.projectSlug}`} target="_blank" className="link link-primary">shipnotes.dev/{project.projectSlug}</a></p>
+            <p>• public changelog: <Link href={`/${project.projectSlug}`} target="_blank" className="link link-primary">shipnotes.dev/{project.projectSlug}</Link></p>
             <p>• the widget will appear on your site within 5 minutes of publishing updates</p>
           </div>
         </div>

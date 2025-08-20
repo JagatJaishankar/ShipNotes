@@ -1,6 +1,6 @@
 "use client";
 // Release note editor component with markdown editing and preview
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
 export default function ReleaseNoteEditor({ patchNote, project, session }) {
@@ -20,9 +20,9 @@ export default function ReleaseNoteEditor({ patchNote, project, session }) {
     }, 3000); // Auto-save after 3 seconds of inactivity
 
     return () => clearTimeout(autoSaveTimer);
-  }, [content, title]);
+  }, [content, title, handleSave, patchNote.content, patchNote.title]);
 
-  const handleSave = async (showMessage = true) => {
+  const handleSave = useCallback(async (showMessage = true) => {
     if (isSaving) return;
     
     setIsSaving(true);
@@ -47,7 +47,7 @@ export default function ReleaseNoteEditor({ patchNote, project, session }) {
     } finally {
       setIsSaving(false);
     }
-  };
+  }, [patchNote._id, title, content, isSaving, setLastSaved]);
 
   const handlePublish = async () => {
     if (isPublishing) return;

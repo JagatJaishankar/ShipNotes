@@ -6,6 +6,7 @@ import PatchNote from "@/models/PatchNote";
 import Project from "@/models/Project";
 import ReleaseNoteEditor from "@/components/editor/ReleaseNoteEditor";
 import Navbar from "@/components/layout/Navbar";
+import Link from "next/link";
 
 export default async function EditPage({ params }) {
   const session = await auth();
@@ -59,12 +60,12 @@ export default async function EditPage({ params }) {
         {/* Header */}
         <div className="mb-6">
           <div className="flex items-center space-x-4 mb-4">
-            <a 
+            <Link 
               href={`/project/${project.projectSlug}`}
               className="btn btn-ghost btn-sm font-raleway font-bold tracking-tighter"
             >
               ← back to project
-            </a>
+            </Link>
           </div>
           
           <div className="flex justify-between items-start">
@@ -87,14 +88,14 @@ export default async function EditPage({ params }) {
             
             <div className="flex space-x-2">
               {patchNote.status === 'published' && (
-                <a
+                <Link
                   href={`/${project.projectSlug}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-secondary btn-sm font-raleway font-bold tracking-tighter"
                 >
                   view live changelog
-                </a>
+                </Link>
               )}
             </div>
           </div>

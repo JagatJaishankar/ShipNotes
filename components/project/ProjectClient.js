@@ -1,6 +1,6 @@
 "use client";
 // Client-side project component for commit selection and release note generation
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import CommitSelector from "./CommitSelector";
 import WidgetGenerator from "./WidgetGenerator";
@@ -17,9 +17,9 @@ export default function ProjectClient({ project, session }) {
   useEffect(() => {
     fetchCommits();
     checkPublishedNotes();
-  }, [dateRange]);
+  }, [dateRange, fetchCommits, checkPublishedNotes]);
 
-  const checkPublishedNotes = async () => {
+  const checkPublishedNotes = useCallback(async () => {
     try {
       const response = await axios.get(`/api/widget/${project.projectSlug}`);
       setHasPublishedNotes(response.data.stats.totalUpdates > 0);
@@ -27,9 +27,9 @@ export default function ProjectClient({ project, session }) {
       // If API returns 404 or error, assume no published notes
       setHasPublishedNotes(false);
     }
-  };
+  }, [project.projectSlug]);
 
-  const fetchCommits = async () => {
+  const fetchCommits = useCallback(async () => {
     setIsLoadingCommits(true);
     try {
       // Calculate since date
@@ -50,7 +50,7 @@ export default function ProjectClient({ project, session }) {
     } finally {
       setIsLoadingCommits(false);
     }
-  };
+  }, [dateRange, project.repository]);
 
   const handleCommitToggle = (commit) => {
     setSelectedCommits(prev => {

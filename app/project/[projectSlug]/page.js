@@ -5,6 +5,7 @@ import connectMongo from "@/lib/mongoose";
 import Project from "@/models/Project";
 import ProjectClient from "@/components/project/ProjectClient";
 import Navbar from "@/components/layout/Navbar";
+import Link from "next/link";
 
 export default async function ProjectPage({ params }) {
   const session = await auth();
@@ -44,12 +45,12 @@ export default async function ProjectPage({ params }) {
         {/* Project Header */}
         <div className="mb-6">
           <div className="flex items-center space-x-4 mb-4">
-            <a 
+            <Link 
               href="/dashboard"
               className="btn btn-ghost btn-sm font-raleway font-bold tracking-tighter"
             >
               ← back to dashboard
-            </a>
+            </Link>
           </div>
           
           <div className="flex justify-between items-start">
@@ -76,14 +77,14 @@ export default async function ProjectPage({ params }) {
               >
                 view on github
               </a>
-              <a
+              <Link
                 href={`/${project.projectSlug}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-secondary btn-sm font-raleway font-bold tracking-tighter"
               >
                 view changelog
-              </a>
+              </Link>
             </div>
           </div>
         </div>
