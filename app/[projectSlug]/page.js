@@ -111,12 +111,12 @@ export default async function PublicChangelogPage({ params }) {
             <p className="font-space tracking-tighter text-sm opacity-60 text-neutral">
               powered by{" "}
               <a
-                href="https://patchnote.dev"
+                href="https://shipnotes.dev"
                 className="hover:opacity-100 transition-opacity"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                patchnote.dev
+                shipnotes.dev
               </a>
             </p>
           </div>

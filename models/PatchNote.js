@@ -1,4 +1,4 @@
-// PatchNote model for patchnote.dev - manages release notes and changelogs
+// PatchNote model for shipnotes.dev - manages release notes and changelogs
 import mongoose from "mongoose";
 
 const PatchNoteSchema = new mongoose.Schema(
@@ -66,4 +66,11 @@ PatchNoteSchema.pre("save", function (next) {
   next();
 });
 
-export default mongoose.models.PatchNote || mongoose.model("PatchNote", PatchNoteSchema);
+let PatchNote;
+try {
+  PatchNote = mongoose.model("PatchNote");
+} catch (error) {
+  PatchNote = mongoose.model("PatchNote", PatchNoteSchema);
+}
+
+export default PatchNote;

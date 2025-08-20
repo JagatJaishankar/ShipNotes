@@ -107,7 +107,7 @@ export default function CreateProjectModal({ isOpen, onClose, onProjectCreated }
         {step === 1 && (
           <div>
             <p className="font-lora tracking-tighter opacity-80 text-neutral mb-4">
-              choose a github repository to create your patchnote project
+              choose a github repository to create your shipnotes project
             </p>
 
             {isLoading ? (
@@ -185,7 +185,7 @@ export default function CreateProjectModal({ isOpen, onClose, onProjectCreated }
                   {/^[a-zA-Z0-9\s\-_]+$/.test(projectName) ? (
                     <div>
                       <p className="font-space tracking-tighter text-sm opacity-60">
-                        URL preview: patchnote.dev/{projectName.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "")}
+                        URL preview: shipnotes.dev/{projectName.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "")}
                       </p>
                       <p className="font-space tracking-tighter text-xs opacity-50 mt-1">
                         ✓ valid project name

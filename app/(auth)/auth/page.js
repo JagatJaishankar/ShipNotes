@@ -15,7 +15,7 @@ export default async function Auth() {
         <div className="text-center space-y-6">
           {/* Logo/Title */}
           <h1 className="font-raleway font-black tracking-tighter text-4xl">
-            patchnote.dev
+            shipnotes.dev
           </h1>
           
           {/* Description */}

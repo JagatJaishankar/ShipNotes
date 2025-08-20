@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import connectMongo from "@/lib/mongoose";
 import Project from "@/models/Project";
 import ProjectClient from "@/components/project/ProjectClient";
+import Navbar from "@/components/layout/Navbar";
 
 export default async function ProjectPage({ params }) {
   const session = await auth();
@@ -37,6 +38,8 @@ export default async function ProjectPage({ params }) {
 
   return (
     <main className="min-h-screen bg-base-100 p-6">
+      <Navbar session={session} />
+      
       <section className="border border-neutral rounded-sm p-6 max-w-6xl mx-auto">
         {/* Project Header */}
         <div className="mb-6">

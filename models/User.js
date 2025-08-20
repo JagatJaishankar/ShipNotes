@@ -1,4 +1,4 @@
-// User model for patchnote.dev - manages user accounts and credits
+// User model for shipnotes.dev - manages user accounts and credits
 import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema(
@@ -43,4 +43,11 @@ const UserSchema = new mongoose.Schema(
 
 // Indexes are automatically created by unique: true fields
 
-export default mongoose.models.User || mongoose.model("User", UserSchema);
+let User;
+try {
+  User = mongoose.model("User");
+} catch (error) {
+  User = mongoose.model("User", UserSchema);
+}
+
+export default User;

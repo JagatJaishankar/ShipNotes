@@ -1,4 +1,4 @@
-// Project model for patchnote.dev - manages user projects and GitHub repositories
+// Project model for shipnotes.dev - manages user projects and GitHub repositories
 import mongoose from "mongoose";
 
 const ProjectSchema = new mongoose.Schema(
@@ -50,4 +50,11 @@ ProjectSchema.index({ repository: 1 });
 // Ensure one project per repository per user
 ProjectSchema.index({ userId: 1, repository: 1 }, { unique: true });
 
-export default mongoose.models.Project || mongoose.model("Project", ProjectSchema);
+let Project;
+try {
+  Project = mongoose.model("Project");
+} catch (error) {
+  Project = mongoose.model("Project", ProjectSchema);
+}
+
+export default Project;

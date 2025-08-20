@@ -1,7 +1,7 @@
 
 ## project overview
 
-**patchnote.dev** - a saas that transforms github commits into beautiful, customer-friendly release notes. automatically generates professional change logs (what i call patchnotes) from commit history using AI, eliminating the manual effort of writing release notes and keeping customers informed about product updates.
+**shipnotes.dev** - a saas that transforms github commits into beautiful, customer-friendly release notes. automatically generates professional change logs (what we call ship notes) from commit history using AI, eliminating the manual effort of writing release notes and keeping customers informed about product updates.
 
 **target users:** indie saas developers and small development teams (1-50 people) who want to keep customers informed about product updates without the manual overhead of writing release notes.
 
@@ -88,7 +88,7 @@
 
 **publishing & distribution**
 
-- hosted changelog page (`patchnote.dev/[project]`)
+- hosted changelog page (`shipnotes.dev/[project]`)
 - simple in-app widget (permanent bottom-left badge showing updates this month)
 - widget redirects to hosted patch note page when clicked
 - copy-paste widget installation code
@@ -183,7 +183,7 @@
 2. copies provided widget script from project page
 3. pastes into their saas application
 4. widget appears showing message "X new updates this month" for that project
-5. users click widget → redirects to change log `patchnote.dev/[projectSlug]`
+5. users click widget → redirects to change log `shipnotes.dev/[projectSlug]`
 
 ## database schema
 
@@ -210,7 +210,7 @@
   _id: ObjectId,
   userId: ObjectId,
   projectName: String, // User-defined project name
-  projectSlug: String, // URL-friendly slug for patchnote.dev/[projectSlug]
+  projectSlug: String, // URL-friendly slug for shipnotes.dev/[projectSlug]
   repository: String, // "owner/repo"
   repositoryUrl: String, // Full GitHub URL
   description: String, // Optional project description
@@ -372,7 +372,7 @@ openai_api_key=
 
 # app
 node_env=http://localhost:3000
-next_public_app_url=https://patchnote.dev
+next_public_app_url=https://shipnotes.dev
 ```
 
 ## credit system
@@ -389,7 +389,7 @@ next_public_app_url=https://patchnote.dev
 
 ```html
 <script>
-fetch('https://patchnote.dev/api/widget/[company]')
+fetch('https://shipnotes.dev/api/widget/[company]')
   .then(r => r.json())
   .then(data => {
     if(data.unread_count > 0) {

@@ -1,10 +1,10 @@
-// PatchNote.dev Widget - Customer embeddable script
+// ShipNotes.dev Widget - Customer embeddable script
 (function() {
   'use strict';
 
   // Widget configuration
   const WIDGET_CONFIG = {
-    apiBase: 'https://patchnote.dev/api/widget',
+    apiBase: 'https://shipnotes.dev/api/widget',
     position: 'bottom-right', // bottom-right, bottom-left, top-right, top-left
     theme: 'light', // light, dark, auto
     showCount: true,
@@ -14,13 +14,13 @@
 
   // Get project slug from script tag
   function getProjectSlug() {
-    const script = document.currentScript || document.querySelector('script[data-patchnote-project]');
-    return script ? script.getAttribute('data-patchnote-project') : null;
+    const script = document.currentScript || document.querySelector('script[data-shipnotes-project]');
+    return script ? script.getAttribute('data-shipnotes-project') : null;
   }
 
   // Merge user config with defaults
   function getConfig() {
-    const script = document.currentScript || document.querySelector('script[data-patchnote-project]');
+    const script = document.currentScript || document.querySelector('script[data-shipnotes-project]');
     if (!script) return WIDGET_CONFIG;
 
     return {
@@ -126,7 +126,7 @@
   async function initWidget() {
     const projectSlug = getProjectSlug();
     if (!projectSlug) {
-      console.warn('PatchNote.dev: No project slug provided');
+      console.warn('ShipNotes.dev: No project slug provided');
       return;
     }
 
@@ -139,7 +139,7 @@
       const data = await response.json();
       
       if (!data.stats.hasNewUpdates) {
-        console.log('PatchNote.dev: No recent updates to show');
+        console.log('ShipNotes.dev: No recent updates to show');
         return;
       }
 
@@ -160,7 +160,7 @@
       }
 
     } catch (error) {
-      console.error('PatchNote.dev widget error:', error);
+      console.error('ShipNotes.dev widget error:', error);
     }
   }
 

@@ -14,12 +14,12 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
 
   // Generate embed code
   const generateEmbedCode = () => {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://patchnote.dev';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://shipnotes.dev';
     
-    return `<!-- PatchNote.dev Widget -->
+    return `<!-- ShipNotes.dev Widget -->
 <script 
   src="${baseUrl}/widget.js"
-  data-patchnote-project="${project.projectSlug}"
+  data-shipnotes-project="${project.projectSlug}"
   data-position="${config.position}"
   data-theme="${config.theme}"
   data-show-count="${config.showCount}"
@@ -276,7 +276,7 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
           </h3>
           <div className="space-y-2 font-lora tracking-tighter opacity-80 text-neutral text-sm">
             <p>• widget api: <code className="font-space bg-base-200 px-1 rounded">GET /api/widget/{project.projectSlug}</code></p>
-            <p>• public changelog: <a href={`/${project.projectSlug}`} target="_blank" className="link link-primary">patchnote.dev/{project.projectSlug}</a></p>
+            <p>• public changelog: <a href={`/${project.projectSlug}`} target="_blank" className="link link-primary">shipnotes.dev/{project.projectSlug}</a></p>
             <p>• the widget will appear on your site within 5 minutes of publishing updates</p>
           </div>
         </div>
