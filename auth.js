@@ -25,12 +25,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return session;
     },
-    async jwt({ token, account, profile }) {
+    async jwt({ token, account, profile, user }) {
       // Store the OAuth account ID and profile data in the token
       if (account && profile) {
         token.githubId = account.providerAccountId;
         token.githubUsername = profile.login;
         token.githubAccessToken = account.access_token;
+        
+        // Get user ID from database (set in signIn callback)
+        if (user?.id) {
+          token.sub = user.id;
+        }
       }
       return token;
     },
@@ -67,6 +72,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           user.id = userData._id.toString();
           
           console.log("✅ User synced to custom User model:", profile.login);
+          console.log("📍 User ID set to:", userData._id.toString());
         } catch (error) {
           console.error("❌ Error saving user data:", error);
           // Continue with sign in even if database save fails
@@ -76,7 +82,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }
   },
   session: { strategy: "jwt" },
-  secret: process.env.NEXTAUTH_SECRET, // Ensure JWT encryption works properly
+  secret: process.env.AUTH_SECRET, // Ensure JWT encryption works properly
   debug: process.env.NODE_ENV === "development",
   pages: {
     signIn: "/auth",
