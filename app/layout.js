@@ -44,6 +44,7 @@ export default function RootLayout({ children }) {
               letterSpacing: '-0.025em',
               opacity: '0.8',
               background: 'hsl(var(--b1))',
+              color: 'hsl(var(--bc))',
               border: '1px solid hsl(var(--n))',
               borderRadius: '0.125rem',
               boxShadow: 'none',
@@ -51,34 +52,22 @@ export default function RootLayout({ children }) {
             // Success toasts
             success: {
               style: {
-                color: 'hsl(var(--su))',
                 borderColor: 'hsl(var(--su))',
-              },
-              iconTheme: {
-                primary: 'hsl(var(--su))',
-                secondary: 'hsl(var(--b1))',
+                color: 'hsl(var(--su))',
               },
             },
             // Error toasts
             error: {
               style: {
-                color: 'hsl(var(--er))',
                 borderColor: 'hsl(var(--er))',
-              },
-              iconTheme: {
-                primary: 'hsl(var(--er))',
-                secondary: 'hsl(var(--b1))',
+                color: 'hsl(var(--er))',
               },
             },
             // Loading toasts
             loading: {
               style: {
-                color: 'hsl(var(--n))',
-                borderColor: 'hsl(var(--n))',
-              },
-              iconTheme: {
-                primary: 'hsl(var(--p))',
-                secondary: 'hsl(var(--b1))',
+                borderColor: 'hsl(var(--p))',
+                color: 'hsl(var(--bc))',
               },
             },
           }}

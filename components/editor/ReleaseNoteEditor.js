@@ -2,6 +2,8 @@
 // Release note editor component with markdown editing and preview
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
+import ConfirmModal from "@/components/ui/ConfirmModal";
+import { toasts } from "@/lib/toast";
 
 export default function ReleaseNoteEditor({ patchNote, project, session }) {
   const [content, setContent] = useState(patchNote.content || "");
@@ -10,6 +12,7 @@ export default function ReleaseNoteEditor({ patchNote, project, session }) {
   const [isPublishing, setIsPublishing] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
+  const [showPublishConfirm, setShowPublishConfirm] = useState(false);
 
   // Auto-save functionality
   useEffect(() => {
@@ -53,13 +56,13 @@ export default function ReleaseNoteEditor({ patchNote, project, session }) {
       if (response.data.success) {
         setLastSaved(new Date());
         if (showMessage) {
-          alert("Draft saved successfully!");
+          toasts.draftSaved();
         }
       }
     } catch (error) {
       console.error("❌ Error saving draft:", error);
       if (showMessage) {
-        alert("Failed to save draft. Please try again.");
+        toasts.draftSaveError();
       }
     } finally {
       setIsSaving(false);
@@ -69,12 +72,6 @@ export default function ReleaseNoteEditor({ patchNote, project, session }) {
   const handlePublish = async () => {
     if (isPublishing) return;
     
-    const confirmPublish = confirm(
-      "Are you sure you want to publish this release note? It will be visible on your public changelog."
-    );
-    
-    if (!confirmPublish) return;
-
     setIsPublishing(true);
     try {
       const response = await axios.put(`/api/patch-notes/${patchNote._id}`, {
@@ -87,7 +84,7 @@ export default function ReleaseNoteEditor({ patchNote, project, session }) {
         // Wait a moment to ensure database is updated
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        alert("Release notes published successfully!");
+        toasts.notePublished();
         
         // Wait another moment before redirect to ensure alert is processed
         setTimeout(() => {
@@ -96,7 +93,7 @@ export default function ReleaseNoteEditor({ patchNote, project, session }) {
       }
     } catch (error) {
       console.error("❌ Error publishing release notes:", error);
-      alert("Failed to publish release notes. Please try again.");
+      toasts.publishError();
     } finally {
       setIsPublishing(false);
     }
@@ -155,7 +152,7 @@ export default function ReleaseNoteEditor({ patchNote, project, session }) {
                 )}
               </button>
               <button
-                onClick={handlePublish}
+                onClick={() => setShowPublishConfirm(true)}
                 disabled={isPublishing || patchNote.status === 'published'}
                 className="btn btn-primary btn-sm font-raleway font-bold tracking-tighter"
               >
@@ -248,6 +245,17 @@ export default function ReleaseNoteEditor({ patchNote, project, session }) {
           )}
         </div>
       </div>
+
+      {/* Publish Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showPublishConfirm}
+        onClose={() => setShowPublishConfirm(false)}
+        onConfirm={handlePublish}
+        title="Publish Release Notes"
+        message="Are you sure you want to publish this release note? It will be visible on your public changelog."
+        confirmText="Publish"
+        type="warning"
+      />
     </div>
   );
 }

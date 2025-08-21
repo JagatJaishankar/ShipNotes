@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import CreateProjectModal from "./CreateProjectModal";
+import ConfirmModal from "@/components/ui/ConfirmModal";
+import { toasts } from "@/lib/toast";
 
 export default function DashboardClient({ session }) {
   const [projects, setProjects] = useState([]);
@@ -10,6 +12,7 @@ export default function DashboardClient({ session }) {
   const [isLoadingProjects, setIsLoadingProjects] = useState(true);
   const [isLoadingDrafts, setIsLoadingDrafts] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, draftId: null, title: '' });
 
   // Fetch projects and drafts on component mount
   useEffect(() => {
@@ -39,18 +42,22 @@ export default function DashboardClient({ session }) {
     }
   };
 
-  const handleDeleteDraft = async (draftId) => {
-    if (!confirm("Are you sure you want to delete this draft? This action cannot be undone.")) {
-      return;
-    }
+  const openDeleteConfirm = (draftId, draftTitle) => {
+    setConfirmModal({ 
+      isOpen: true, 
+      draftId, 
+      title: draftTitle 
+    });
+  };
 
+  const handleDeleteDraft = async () => {
     try {
-      await axios.delete(`/api/patch-notes/${draftId}`);
-      setDrafts(prev => prev.filter(draft => draft.id !== draftId));
-      // Success feedback would go here when we implement toast notifications
+      await axios.delete(`/api/patch-notes/${confirmModal.draftId}`);
+      setDrafts(prev => prev.filter(draft => draft.id !== confirmModal.draftId));
+      toasts.draftDeleted();
     } catch (error) {
       console.error("❌ Error deleting draft:", error);
-      alert("Failed to delete draft. Please try again.");
+      toasts.draftDeleteError();
     }
   };
 
@@ -191,7 +198,7 @@ export default function DashboardClient({ session }) {
                       continue editing
                     </button>
                     <button
-                      onClick={() => handleDeleteDraft(draft.id)}
+                      onClick={() => openDeleteConfirm(draft.id, draft.title)}
                       className="btn btn-error btn-outline btn-sm font-raleway font-bold tracking-tighter"
                     >
                       delete
@@ -217,6 +224,17 @@ export default function DashboardClient({ session }) {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onProjectCreated={handleProjectCreated}
+      />
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        onClose={() => setConfirmModal({ isOpen: false, draftId: null, title: '' })}
+        onConfirm={handleDeleteDraft}
+        title="Delete Draft"
+        message={`Are you sure you want to delete "${confirmModal.title}"? This action cannot be undone.`}
+        confirmText="Delete Draft"
+        type="error"
       />
     </div>
   );

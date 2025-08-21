@@ -2,6 +2,7 @@
 // Project creation modal for selecting GitHub repositories
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { toasts, showError } from "@/lib/toast";
 
 export default function CreateProjectModal({ isOpen, onClose, onProjectCreated }) {
   const [step, setStep] = useState(1); // 1: repos, 2: project details
@@ -26,7 +27,7 @@ export default function CreateProjectModal({ isOpen, onClose, onProjectCreated }
       setRepositories(response.data.repositories);
     } catch (error) {
       console.error("❌ Error fetching repositories:", error);
-      alert("Failed to fetch repositories. Please try again.");
+      showError("Failed to fetch repositories. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -40,13 +41,13 @@ export default function CreateProjectModal({ isOpen, onClose, onProjectCreated }
 
   const handleCreateProject = async () => {
     if (!selectedRepo || !projectName.trim()) {
-      alert("Please fill in all required fields");
+      showError("Please fill in all required fields");
       return;
     }
 
     // Validate project name for URL safety
     if (!/^[a-zA-Z0-9\s\-_]+$/.test(projectName.trim())) {
-      alert("Project name can only contain letters, numbers, spaces, hyphens, and underscores");
+      showError("Project name can only contain letters, numbers, spaces, hyphens, and underscores");
       return;
     }
 
@@ -66,11 +67,11 @@ export default function CreateProjectModal({ isOpen, onClose, onProjectCreated }
 
       // Reset form and close modal
       handleClose();
-      alert(response.data.message || "Project created successfully!");
+      toasts.projectCreated(projectName.trim());
     } catch (error) {
       console.error("❌ Error creating project:", error);
       const errorMessage = error.response?.data?.error || "Failed to create project";
-      alert(errorMessage);
+      showError(errorMessage);
     } finally {
       setIsCreating(false);
     }

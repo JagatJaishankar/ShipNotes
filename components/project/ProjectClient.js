@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import CommitSelector from "./CommitSelector";
 import WidgetGenerator from "./WidgetGenerator";
+import { toasts, showError, showLoading, dismissToast } from "@/lib/toast";
 
 export default function ProjectClient({ project, session }) {
   const [commits, setCommits] = useState([]);
@@ -40,7 +41,7 @@ export default function ProjectClient({ project, session }) {
       setCommits(response.data.commits);
     } catch (error) {
       console.error("❌ Error fetching commits:", error);
-      alert("Failed to fetch commits. Please try again.");
+      toasts.commitsError();
     } finally {
       setIsLoadingCommits(false);
     }
@@ -65,11 +66,13 @@ export default function ProjectClient({ project, session }) {
 
   const handleGenerateReleaseNotes = async () => {
     if (selectedCommits.length === 0) {
-      alert("Please select at least one commit to generate release notes.");
+      showError("Please select at least one commit to generate release notes.");
       return;
     }
 
     setIsGenerating(true);
+    const loadingToast = toasts.generating();
+    
     try {
       const response = await axios.post("/api/openai/generate", {
         projectId: project._id,
@@ -78,13 +81,19 @@ export default function ProjectClient({ project, session }) {
       });
 
       if (response.data.success) {
-        // Navigate to editor page with the generated notes
-        window.location.href = `/edit/${response.data.patchNote.id}`;
+        dismissToast(loadingToast);
+        toasts.generated();
+        // Small delay to show success toast before navigating
+        setTimeout(() => {
+          window.location.href = `/edit/${response.data.patchNote.id}`;
+        }, 500);
       } else {
         throw new Error(response.data.error || "Failed to generate release notes");
       }
     } catch (error) {
       console.error("❌ Error generating release notes:", error);
+      
+      dismissToast(loadingToast);
       
       // Handle specific error messages
       let errorMessage = "Failed to generate release notes. Please try again.";
@@ -92,7 +101,7 @@ export default function ProjectClient({ project, session }) {
         errorMessage = error.response.data.error;
       }
       
-      alert(errorMessage);
+      showError(errorMessage);
     } finally {
       setIsGenerating(false);
     }

@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import connectMongo from "@/lib/mongoose";
 import User from "@/models/User";
 import Navbar from "@/components/layout/Navbar";
+import DeleteAccountButton from "@/components/settings/DeleteAccountButton";
 
 export default async function SettingsPage() {
   const session = await auth();
@@ -204,12 +205,7 @@ export default async function SettingsPage() {
                 <p className="font-lora tracking-tighter opacity-80 text-neutral text-sm mb-3">
                   permanently delete your account and all associated data. this action cannot be undone.
                 </p>
-                <button
-                  className="btn btn-error btn-outline btn-sm font-raleway font-bold tracking-tighter"
-                  onClick={() => alert('Account deletion not yet implemented. Please contact support.')}
-                >
-                  delete account
-                </button>
+                <DeleteAccountButton />
               </div>
             </div>
           </div>
