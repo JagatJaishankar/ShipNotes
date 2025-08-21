@@ -17,6 +17,7 @@ export async function GET(request) {
     // Parse URL parameters
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status"); // "draft", "published", or null for all
+    const projectId = searchParams.get("projectId"); // Filter by specific project
     const limit = parseInt(searchParams.get("limit")) || 50;
 
     // Connect to database
@@ -26,6 +27,9 @@ export async function GET(request) {
     const filter = { userId: session.user.id };
     if (status) {
       filter.status = status;
+    }
+    if (projectId) {
+      filter.projectId = projectId;
     }
 
     // Fetch patch notes with project details

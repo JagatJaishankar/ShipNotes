@@ -5,8 +5,12 @@ import axios from "axios";
 import CommitSelector from "./CommitSelector";
 import WidgetGenerator from "./WidgetGenerator";
 import { toasts, showError, showLoading, dismissToast } from "@/lib/toast";
+import { useRouter } from "next/navigation";
 
-export default function ProjectClient({ project, session }) {
+export default function ProjectClient({ project, session, ProjectSettings, ReleaseNotesManager }) {
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState("commits");
+  const [currentProject, setCurrentProject] = useState(project);
   const [commits, setCommits] = useState([]);
   const [selectedCommits, setSelectedCommits] = useState([]);
   const [isLoadingCommits, setIsLoadingCommits] = useState(false);
@@ -117,72 +121,133 @@ export default function ProjectClient({ project, session }) {
     }
   };
 
+  const handleProjectUpdate = (updatedProject) => {
+    setCurrentProject(updatedProject);
+    // If project slug changed, redirect to new URL
+    if (updatedProject.projectSlug !== project.projectSlug) {
+      router.push(`/project/${updatedProject.projectSlug}`);
+    }
+  };
+
+  const handleProjectDelete = () => {
+    router.push('/dashboard');
+  };
+
   return (
     <div className="space-y-6">
-      {/* Date Range Selector */}
-      <div className="border border-neutral rounded-sm p-4">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="font-raleway font-bold text-xl tracking-tighter">
-            select commits
-          </h2>
-          <div className="flex items-center space-x-4">
-            <span className="font-lora tracking-tighter opacity-80 text-neutral text-sm">
-              show commits from last:
-            </span>
-            <select
-              value={dateRange}
-              onChange={(e) => setDateRange(Number(e.target.value))}
-              className="select select-bordered select-sm font-raleway"
-            >
-              <option value={7}>7 days</option>
-              <option value={14}>14 days</option>
-              <option value={30}>30 days</option>
-              <option value={60}>60 days</option>
-              <option value={90}>90 days</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Selected Commits Summary */}
-        {selectedCommits.length > 0 && (
-          <div className="mb-4 p-3 bg-base-200 rounded-sm border border-neutral">
-            <div className="flex justify-between items-center">
-              <span className="font-lora tracking-tighter opacity-80 text-neutral">
-                {selectedCommits.length} commit{selectedCommits.length !== 1 ? 's' : ''} selected
-              </span>
-              <button
-                onClick={handleGenerateReleaseNotes}
-                disabled={isGenerating}
-                className="btn btn-primary btn-sm font-raleway font-bold tracking-tighter"
-              >
-                {isGenerating ? (
-                  <>
-                    <span className="loading loading-spinner loading-sm"></span>
-                    generating...
-                  </>
-                ) : (
-                  "generate release notes"
-                )}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Commit List */}
-        <CommitSelector
-          commits={commits}
-          selectedCommits={selectedCommits}
-          onCommitToggle={handleCommitToggle}
-          isLoading={isLoadingCommits}
-          onRefresh={fetchCommits}
-        />
+      {/* Navigation Tabs */}
+      <div className="tabs tabs-bordered">
+        <button
+          onClick={() => setActiveTab("commits")}
+          className={`tab ${activeTab === "commits" ? "tab-active" : ""} font-raleway font-bold tracking-tighter`}
+        >
+          generate release notes
+        </button>
+        <button
+          onClick={() => setActiveTab("notes")}
+          className={`tab ${activeTab === "notes" ? "tab-active" : ""} font-raleway font-bold tracking-tighter`}
+        >
+          manage release notes
+        </button>
+        <button
+          onClick={() => setActiveTab("widget")}
+          className={`tab ${activeTab === "widget" ? "tab-active" : ""} font-raleway font-bold tracking-tighter`}
+        >
+          widget & integration
+        </button>
+        <button
+          onClick={() => setActiveTab("settings")}
+          className={`tab ${activeTab === "settings" ? "tab-active" : ""} font-raleway font-bold tracking-tighter`}
+        >
+          project settings
+        </button>
       </div>
 
-      {/* Widget Integration */}
-      <WidgetGenerator 
-        project={project} 
-        hasPublishedNotes={hasPublishedNotes}
-      />
+      {/* Tab Content */}
+      {activeTab === "commits" && (
+        <div className="space-y-6">
+          {/* Date Range Selector */}
+          <div className="border border-neutral rounded-sm p-4">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="font-raleway font-bold text-xl tracking-tighter">
+                select commits
+              </h2>
+              <div className="flex items-center space-x-4">
+                <span className="font-lora tracking-tighter opacity-80 text-neutral text-sm">
+                  show commits from last:
+                </span>
+                <select
+                  value={dateRange}
+                  onChange={(e) => setDateRange(Number(e.target.value))}
+                  className="select select-bordered select-sm font-raleway"
+                >
+                  <option value={7}>7 days</option>
+                  <option value={14}>14 days</option>
+                  <option value={30}>30 days</option>
+                  <option value={60}>60 days</option>
+                  <option value={90}>90 days</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Selected Commits Summary */}
+            {selectedCommits.length > 0 && (
+              <div className="mb-4 p-3 bg-base-200 rounded-sm border border-neutral">
+                <div className="flex justify-between items-center">
+                  <span className="font-lora tracking-tighter opacity-80 text-neutral">
+                    {selectedCommits.length} commit{selectedCommits.length !== 1 ? 's' : ''} selected
+                  </span>
+                  <button
+                    onClick={handleGenerateReleaseNotes}
+                    disabled={isGenerating}
+                    className="btn btn-primary btn-sm font-raleway font-bold tracking-tighter"
+                  >
+                    {isGenerating ? (
+                      <>
+                        <span className="loading loading-spinner loading-sm"></span>
+                        generating...
+                      </>
+                    ) : (
+                      "generate release notes"
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Commit List */}
+            <CommitSelector
+              commits={commits}
+              selectedCommits={selectedCommits}
+              onCommitToggle={handleCommitToggle}
+              isLoading={isLoadingCommits}
+              onRefresh={fetchCommits}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Release Notes Management Tab */}
+      {activeTab === "notes" && (
+        <ReleaseNotesManager project={currentProject} />
+      )}
+
+      {/* Widget & Integration Tab */}
+      {activeTab === "widget" && (
+        <WidgetGenerator 
+          project={currentProject} 
+          hasPublishedNotes={hasPublishedNotes}
+        />
+      )}
+
+      {/* Project Settings Tab */}
+      {activeTab === "settings" && (
+        <ProjectSettings 
+          project={currentProject} 
+          onProjectUpdate={handleProjectUpdate}
+          onProjectDelete={handleProjectDelete}
+        />
+      )}
     </div>
   );
 }

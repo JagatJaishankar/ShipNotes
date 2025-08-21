@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import connectMongo from "@/lib/mongoose";
 import Project from "@/models/Project";
 import ProjectClient from "@/components/project/ProjectClient";
+import ProjectSettings from "@/components/project/ProjectSettings";
+import ReleaseNotesManager from "@/components/project/ReleaseNotesManager";
 import Navbar from "@/components/layout/Navbar";
 import Link from "next/link";
 
@@ -89,8 +91,13 @@ export default async function ProjectPage({ params }) {
           </div>
         </div>
 
-        {/* Project Client Component */}
-        <ProjectClient project={serializedProject} session={session} />
+        {/* Project Management Tabs */}
+        <ProjectClient 
+          project={serializedProject} 
+          session={session}
+          ProjectSettings={ProjectSettings}
+          ReleaseNotesManager={ReleaseNotesManager}
+        />
       </section>
     </main>
   );
