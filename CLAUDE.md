@@ -377,11 +377,14 @@ next_public_app_url=https://shipnotes.dev
 
 ## credit system
 
-- new users: 3 credits
+- new users: 20 credits
 - each generation: -1 credit
 - pro users: credits = -1 (unlimited)
 - wall at 0 credits
-	- book meeting to fill credit bar, all 20 credits
+	- feedback form to reset credit bar back to 20 credits
+	- form requires 3 questions with minimum 15 characters each
+	- credits reset to exactly 20 regardless of current amount
+	- user can submit feedback form anytime they have <20 credits
 
 ## widget implementation
 

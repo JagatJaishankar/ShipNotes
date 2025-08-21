@@ -5,6 +5,7 @@ import connectMongo from "@/lib/mongoose";
 import User from "@/models/User";
 import Navbar from "@/components/layout/Navbar";
 import DeleteAccountButton from "@/components/settings/DeleteAccountButton";
+import Link from "next/link";
 
 export default async function SettingsPage() {
   const session = await auth();
@@ -117,17 +118,20 @@ export default async function SettingsPage() {
               </div>
             </div>
             
-            {!user.isProUser && user.credits <= 5 && (
-              <div className="mt-4 p-4 bg-warning/10 rounded border border-warning/20">
-                <p className="font-lora tracking-tighter text-warning mb-2">
-                  you&apos;re running low on credits!
+            {!user.isProUser && user.credits < 20 && (
+              <div className="mt-4 p-4 bg-primary/10 rounded border border-primary/20">
+                <p className="font-lora tracking-tighter text-primary mb-2">
+                  {user.credits === 0 ? 'out of credits!' : 'get more free credits!'}
                 </p>
-                <a
-                  href="mailto:support@shipnotes.dev?subject=Request Credits"
-                  className="btn btn-warning btn-sm font-raleway font-bold tracking-tighter"
+                <Link
+                  href="/feedback"
+                  className="btn btn-primary btn-sm font-raleway font-bold tracking-tighter"
                 >
-                  contact support for more credits
-                </a>
+                  get free credits via feedback
+                </Link>
+                <p className="font-space tracking-tighter text-xs opacity-60 mt-2">
+                  share quick feedback to reset credits to 20
+                </p>
               </div>
             )}
           </div>

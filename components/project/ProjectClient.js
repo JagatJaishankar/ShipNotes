@@ -95,7 +95,17 @@ export default function ProjectClient({ project, session }) {
       
       dismissToast(loadingToast);
       
-      // Handle specific error messages
+      // Handle no credits scenario
+      if (error.response?.data?.errorType === "no_credits") {
+        showError(error.response.data.error);
+        // Redirect to feedback page after short delay
+        setTimeout(() => {
+          window.location.href = "/feedback";
+        }, 2000);
+        return;
+      }
+      
+      // Handle other error messages
       let errorMessage = "Failed to generate release notes. Please try again.";
       if (error.response?.data?.error) {
         errorMessage = error.response.data.error;

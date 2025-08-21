@@ -41,7 +41,11 @@ export async function POST(request) {
     // Check if user has credits (unless pro user)
     if (!user.isProUser && user.credits <= 0) {
       return NextResponse.json(
-        { error: "Insufficient credits. Please contact support to add more credits." },
+        { 
+          error: "No credits remaining. Please submit feedback to get more free credits.",
+          errorType: "no_credits",
+          redirectUrl: "/feedback"
+        },
         { status: 403 }
       );
     }
