@@ -36,39 +36,9 @@ export default function RootLayout({ children }) {
           position="top-right"
           reverseOrder={true}
           toastOptions={{
-            // Default options for all toasts
             duration: 4000,
             style: {
               fontFamily: 'var(--font-lora)',
-              fontSize: '14px',
-              letterSpacing: '-0.025em',
-              opacity: '0.8',
-              background: 'hsl(var(--b1))',
-              color: 'hsl(var(--bc))',
-              border: '1px solid hsl(var(--n))',
-              borderRadius: '0.125rem',
-              boxShadow: 'none',
-            },
-            // Success toasts
-            success: {
-              style: {
-                borderColor: 'hsl(var(--su))',
-                color: 'hsl(var(--su))',
-              },
-            },
-            // Error toasts
-            error: {
-              style: {
-                borderColor: 'hsl(var(--er))',
-                color: 'hsl(var(--er))',
-              },
-            },
-            // Loading toasts
-            loading: {
-              style: {
-                borderColor: 'hsl(var(--p))',
-                color: 'hsl(var(--bc))',
-              },
             },
           }}
         />

@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import connectMongo from "@/lib/mongoose";
 import User from "@/models/User";
+import Project from "@/models/Project";
 import Navbar from "@/components/layout/Navbar";
 import DeleteAccountButton from "@/components/settings/DeleteAccountButton";
 import Link from "next/link";
@@ -18,10 +19,24 @@ export default async function SettingsPage() {
   // Connect to database and fetch user data
   await connectMongo();
   const user = await User.findById(session.user.id).lean();
+  const projects = await Project.find({ userId: session.user.id }).lean();
 
   if (!user) {
     redirect("/dashboard");
   }
+
+  // Serialize data for client components
+  const serializedProjects = projects.map(project => ({
+    id: project._id.toString(),
+    projectName: project.projectName,
+    projectSlug: project.projectSlug,
+    repository: project.repository,
+    repositoryUrl: project.repositoryUrl,
+    description: project.description,
+    isActive: project.isActive,
+    createdAt: project.createdAt,
+    updatedAt: project.updatedAt,
+  }));
 
   return (
     <main className="min-h-screen bg-base-100 p-6">
@@ -132,6 +147,55 @@ export default async function SettingsPage() {
                 <p className="font-space tracking-tighter text-xs opacity-60 mt-2">
                   share quick feedback to reset credits to 20
                 </p>
+              </div>
+            )}
+          </div>
+
+          {/* Projects Overview */}
+          <div className="border border-neutral rounded-sm p-6">
+            <h2 className="font-raleway font-bold text-xl tracking-tighter mb-4">
+              your projects
+            </h2>
+            {serializedProjects.length === 0 ? (
+              <div className="text-center py-4">
+                <p className="font-lora tracking-tighter opacity-60 text-neutral mb-3">
+                  no projects yet. create your first project to get started.
+                </p>
+                <Link
+                  href="/dashboard"
+                  className="btn btn-primary btn-sm font-raleway font-bold tracking-tighter"
+                >
+                  create project
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {serializedProjects.map((project) => (
+                  <div
+                    key={project.id}
+                    className="border border-neutral/50 rounded-sm p-3 flex items-center justify-between"
+                  >
+                    <div>
+                      <h3 className="font-raleway font-bold tracking-tighter">
+                        {project.projectName}
+                      </h3>
+                      <p className="font-space text-sm opacity-60">
+                        {project.repository}
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className={`badge ${project.isActive ? 'badge-success' : 'badge-error'} badge-sm`}>
+                        {project.isActive ? 'active' : 'inactive'}
+                      </span>
+                      <Link
+                        href={`/project/${project.projectSlug}`}
+                        className="btn btn-ghost btn-sm font-raleway tracking-tighter"
+                      >
+                        view →
+                      </Link>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>
