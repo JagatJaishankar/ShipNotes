@@ -1,5 +1,6 @@
 import { Lora, Raleway, Space_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
 
 const lora = Lora({
   variable: "--font-lora",
@@ -29,6 +30,60 @@ export default function RootLayout({ children }) {
         className={`${lora.variable} ${raleway.variable} ${space.variable} antialiased`}
       >
         {children}
+        
+        {/* Toast Notifications */}
+        <Toaster
+          position="top-right"
+          reverseOrder={true}
+          toastOptions={{
+            // Default options for all toasts
+            duration: 4000,
+            style: {
+              fontFamily: 'var(--font-lora)',
+              fontSize: '14px',
+              letterSpacing: '-0.025em',
+              opacity: '0.8',
+              background: 'hsl(var(--b1))',
+              border: '1px solid hsl(var(--n))',
+              borderRadius: '0.125rem',
+              boxShadow: 'none',
+            },
+            // Success toasts
+            success: {
+              style: {
+                color: 'hsl(var(--su))',
+                borderColor: 'hsl(var(--su))',
+              },
+              iconTheme: {
+                primary: 'hsl(var(--su))',
+                secondary: 'hsl(var(--b1))',
+              },
+            },
+            // Error toasts
+            error: {
+              style: {
+                color: 'hsl(var(--er))',
+                borderColor: 'hsl(var(--er))',
+              },
+              iconTheme: {
+                primary: 'hsl(var(--er))',
+                secondary: 'hsl(var(--b1))',
+              },
+            },
+            // Loading toasts
+            loading: {
+              style: {
+                color: 'hsl(var(--n))',
+                borderColor: 'hsl(var(--n))',
+              },
+              iconTheme: {
+                primary: 'hsl(var(--p))',
+                secondary: 'hsl(var(--b1))',
+              },
+            },
+          }}
+        />
+        
         {/* ShipNotes.dev Widget */}
         <script
           src="https://shipnotes.dev/widget.js"
