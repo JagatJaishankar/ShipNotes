@@ -79,7 +79,7 @@ small stuff, but it adds up. keep the feedback coming!`
         </h1>
         <div className="font-lora text-lg opacity-80 mb-8">
           just connect your github. <br className="sm:hidden" />
-          we'll turn your commits into customer-friendly updates.
+          we&apos;ll turn your commits into customer-friendly updates.
         </div>
         <a href="#pricing">
           <button className="btn btn-neutral font-raleway font-extrabold text-lg">
@@ -96,7 +96,7 @@ small stuff, but it adds up. keep the feedback coming!`
               <div className="bg-base-100 border border-neutral rounded-sm p-4">
                 <div className="font-space text-xs opacity-60 mb-2">before shipnotes</div>
                 <div className="font-lora text-sm opacity-80 mb-4">
-                  "we shipped some fixes and features this week. check the commit history if you care lol"
+                  &ldquo;we shipped some fixes and features this week. check the commit history if you care lol&rdquo;
                 </div>
                 <div className="font-space text-xs opacity-60">
                   — every indie dev ever
@@ -111,7 +111,7 @@ small stuff, but it adds up. keep the feedback coming!`
                 your customers deserve better than commit messages.
               </h1>
               <div className="font-lora mb-8 opacity-80">
-                you're already documenting your work in commits. why not turn that into something your users actually want to read?
+                you&apos;re already documenting your work in commits. why not turn that into something your users actually want to read?
               </div>
               <a href="#pricing">
                 <button className="btn btn-neutral font-raleway font-extrabold text-lg">
@@ -133,7 +133,7 @@ small stuff, but it adds up. keep the feedback coming!`
             from messy commits to clean updates.
           </h1>
           <div className="font-lora opacity-80 mb-8">
-            here's exactly how your github commits become customer-friendly release notes.
+            here&apos;s exactly how your github commits become customer-friendly release notes.
           </div>
         </div>
 
@@ -273,7 +273,7 @@ small stuff, but it adds up. keep the feedback coming!`
             </div>
           </div>
           <Link href={"/auth"} className="btn btn-neutral w-full font-raleway font-extrabold">
-            let's go.
+            let&apos;s go.
           </Link>
           <div className="font-space text-xs opacity-40 mt-3">
             no credit card. no bullshit.
