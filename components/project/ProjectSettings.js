@@ -3,7 +3,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { toasts, showError, showLoading, dismissToast } from "@/lib/toast";
-import ConfirmModal from "@/components/ui/ConfirmModal";
+import { ConfirmModal, Button, Input, TextArea } from "@/components/ui";
 
 export default function ProjectSettings({ project, onProjectUpdate, onProjectDelete }) {
   const [isEditing, setIsEditing] = useState({
@@ -105,57 +105,59 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
       {/* Project Name */}
       <div className="border border-neutral rounded-sm p-4">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="font-raleway font-bold tracking-tighter">project name</h3>
+          <h3 className="font-raleway font-bold tracking-tighter lowercase">project name</h3>
           {!isEditing.name && (
-            <button
+            <Button
               onClick={() => setIsEditing({ ...isEditing, name: true })}
-              className="btn btn-ghost btn-sm font-raleway tracking-tighter"
+              variant="ghost"
+              size="sm"
               disabled={updating}
             >
               edit
-            </button>
+            </Button>
           )}
         </div>
         
         {isEditing.name ? (
           <div className="space-y-3">
-            <input
+            <Input
               type="text"
               value={formData.projectName}
               onChange={(e) => setFormData({ ...formData, projectName: e.target.value })}
-              className="input input-bordered w-full font-lora"
               disabled={updating}
             />
             {formData.projectName && (
-              <p className="font-space text-xs opacity-60">
-                URL: shipnotes.dev/{formData.projectName.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "")}
+              <p className="font-space text-xs opacity-60 lowercase">
+                url: shipnotes.dev/{formData.projectName.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "")}
               </p>
             )}
             <div className="flex space-x-2">
-              <button
+              <Button
                 onClick={() => handleUpdate('projectName')}
                 disabled={updating}
-                className="btn btn-primary btn-sm font-raleway font-bold tracking-tighter"
+                variant="primary"
+                size="sm"
               >
                 {updating ? "saving..." : "save"}
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => {
                   setIsEditing({ ...isEditing, name: false });
                   setFormData({ ...formData, projectName: project.projectName });
                 }}
                 disabled={updating}
-                className="btn btn-ghost btn-sm font-raleway tracking-tighter"
+                variant="ghost"
+                size="sm"
               >
                 cancel
-              </button>
+              </Button>
             </div>
           </div>
         ) : (
           <div>
-            <p className="font-lora tracking-tighter">{project.projectName}</p>
-            <p className="font-space text-xs opacity-60 mt-1">
-              URL: shipnotes.dev/{project.projectSlug}
+            <p className="font-lora tracking-wide">{project.projectName} {/* Keep user content in original case */}</p>
+            <p className="font-space text-xs opacity-60 mt-1 lowercase">
+              url: shipnotes.dev/{project.projectSlug}
             </p>
           </div>
         )}
@@ -164,21 +166,22 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
       {/* Repository */}
       <div className="border border-neutral rounded-sm p-4">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="font-raleway font-bold tracking-tighter">repository</h3>
+          <h3 className="font-raleway font-bold tracking-tighter lowercase">repository</h3>
           {!isEditing.repository && (
-            <button
+            <Button
               onClick={() => setIsEditing({ ...isEditing, repository: true })}
-              className="btn btn-ghost btn-sm font-raleway tracking-tighter"
+              variant="ghost"
+              size="sm"
               disabled={updating}
             >
               edit
-            </button>
+            </Button>
           )}
         </div>
         
         {isEditing.repository ? (
           <div className="space-y-3">
-            <input
+            <Input
               type="text"
               value={formData.repository}
               onChange={(e) => {
@@ -189,18 +192,19 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
                 });
               }}
               placeholder="owner/repository"
-              className="input input-bordered w-full font-space"
+              className="font-space"
               disabled={updating}
             />
             <div className="flex space-x-2">
-              <button
+              <Button
                 onClick={() => handleUpdate('repository')}
                 disabled={updating}
-                className="btn btn-primary btn-sm font-raleway font-bold tracking-tighter"
+                variant="primary"
+                size="sm"
               >
                 {updating ? "saving..." : "save"}
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => {
                   setIsEditing({ ...isEditing, repository: false });
                   setFormData({ 
@@ -210,21 +214,22 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
                   });
                 }}
                 disabled={updating}
-                className="btn btn-ghost btn-sm font-raleway tracking-tighter"
+                variant="ghost"
+                size="sm"
               >
                 cancel
-              </button>
+              </Button>
             </div>
           </div>
         ) : (
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-space tracking-tighter">{project.repository}</p>
+              <p className="font-space tracking-normal">{project.repository} {/* Keep user content in original case */}</p>
               <a
                 href={project.repositoryUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-space text-xs link link-primary mt-1"
+                className="font-space text-xs link link-primary mt-1 lowercase"
               >
                 view on github →
               </a>
@@ -236,70 +241,73 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
       {/* Description */}
       <div className="border border-neutral rounded-sm p-4">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="font-raleway font-bold tracking-tighter">description</h3>
+          <h3 className="font-raleway font-bold tracking-tighter lowercase">description</h3>
           {!isEditing.description && (
-            <button
+            <Button
               onClick={() => setIsEditing({ ...isEditing, description: true })}
-              className="btn btn-ghost btn-sm font-raleway tracking-tighter"
+              variant="ghost"
+              size="sm"
               disabled={updating}
             >
               edit
-            </button>
+            </Button>
           )}
         </div>
         
         {isEditing.description ? (
           <div className="space-y-3">
-            <textarea
+            <TextArea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="optional project description"
-              className="textarea textarea-bordered w-full font-lora resize-none"
               rows={3}
               disabled={updating}
             />
             <div className="flex space-x-2">
-              <button
+              <Button
                 onClick={() => handleUpdate('description')}
                 disabled={updating}
-                className="btn btn-primary btn-sm font-raleway font-bold tracking-tighter"
+                variant="primary"
+                size="sm"
               >
                 {updating ? "saving..." : "save"}
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => {
                   setIsEditing({ ...isEditing, description: false });
                   setFormData({ ...formData, description: project.description || "" });
                 }}
                 disabled={updating}
-                className="btn btn-ghost btn-sm font-raleway tracking-tighter"
+                variant="ghost"
+                size="sm"
               >
                 cancel
-              </button>
+              </Button>
             </div>
           </div>
         ) : (
-          <p className="font-lora tracking-tighter opacity-80">
-            {project.description || "no description"}
+          <p className="font-lora tracking-wide opacity-80">
+            {project.description || <span className="lowercase">no description</span>} {/* Keep user content in original case */}
           </p>
         )}
       </div>
 
       {/* Quick Actions */}
       <div className="border border-neutral rounded-sm p-4">
-        <h3 className="font-raleway font-bold tracking-tighter mb-3">quick actions</h3>
+        <h3 className="font-raleway font-bold tracking-tighter mb-3 lowercase">quick actions</h3>
         <div className="flex flex-wrap gap-2">
-          <button
+          <Button
             onClick={copyChangelogLink}
-            className="btn btn-secondary btn-sm font-raleway font-bold tracking-tighter"
+            variant="secondary"
+            size="sm"
           >
             copy changelog link
-          </button>
+          </Button>
           <a
             href={`/${project.projectSlug}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-outline btn-sm font-raleway font-bold tracking-tighter"
+            className="btn btn-outline btn-sm font-raleway font-extrabold tracking-tighter lowercase border-1"
           >
             view changelog →
           </a>
@@ -308,18 +316,19 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
 
       {/* Danger Zone */}
       <div className="border border-error rounded-sm p-4">
-        <h3 className="font-raleway font-bold tracking-tighter text-error mb-3">danger zone</h3>
+        <h3 className="font-raleway font-bold tracking-tighter text-error mb-3 lowercase">danger zone</h3>
         <div>
-          <p className="font-lora tracking-tighter text-sm opacity-80 mb-3">
+          <p className="font-lora tracking-wide text-sm opacity-80 mb-3 lowercase">
             delete this project and all associated release notes. this action cannot be undone.
           </p>
-          <button
+          <Button
             onClick={() => setShowDeleteModal(true)}
-            className="btn btn-error btn-sm font-raleway font-bold tracking-tighter"
+            variant="error"
+            size="sm"
             disabled={deleting}
           >
             {deleting ? "deleting..." : "delete project"}
-          </button>
+          </Button>
         </div>
       </div>
 

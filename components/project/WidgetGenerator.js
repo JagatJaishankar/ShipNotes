@@ -2,6 +2,7 @@
 // Widget generator component for project page - generates embed code for customers
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { Button, Select, TextArea } from "@/components/ui";
 
 export default function WidgetGenerator({ project, hasPublishedNotes }) {
   const [config, setConfig] = useState({
@@ -112,34 +113,39 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
 
   if (!hasPublishedNotes) {
     return (
-      <div className="border border-neutral rounded-sm p-6">
-        <h2 className="font-raleway font-bold text-xl tracking-tighter mb-4">
+      <div>
+        <h2 className="font-raleway font-bold text-xl tracking-tighter lowercase mb-4">
           widget integration
         </h2>
         <div className="bg-base-200 rounded-sm p-4 border border-neutral">
-          <p className="font-lora tracking-tighter opacity-80 text-neutral mb-3">
-            publish your first release note to generate widget code for your website.
-          </p>
-          <p className="font-space tracking-tighter text-sm opacity-60 text-neutral">
-            the widget will automatically show new updates to your customers.
-          </p>
+          <div className="text-center py-8">
+            <div className="text-6xl opacity-50 mb-4">📱</div>
+            <h3 className="font-raleway font-bold tracking-tighter text-lg lowercase opacity-70 mb-2">no published notes yet</h3>
+            <p className="font-lora tracking-wide opacity-80 text-neutral lowercase mb-3">
+              publish your first release note to generate widget code for your website.
+            </p>
+            <p className="font-space tracking-normal text-sm opacity-60 text-neutral lowercase">
+              the widget will automatically show new updates to your customers.
+            </p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="border border-neutral rounded-sm p-6">
+    <div>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="font-raleway font-bold text-xl tracking-tighter">
+        <h2 className="font-raleway font-bold text-xl tracking-tighter lowercase">
           widget integration
         </h2>
-        <button
+        <Button
           onClick={() => setShowPreview(!showPreview)}
-          className="btn btn-outline btn-sm font-raleway font-bold tracking-tighter"
+          variant="outline"
+          size="sm"
         >
           {showPreview ? 'hide preview' : 'show preview'}
-        </button>
+        </Button>
       </div>
 
       <div className="space-y-6">
@@ -147,39 +153,37 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Position */}
           <div>
-            <label className="font-raleway font-bold tracking-tighter text-sm opacity-80 mb-2 block">
+            <label className="font-raleway font-bold tracking-tighter text-sm opacity-80 mb-2 block lowercase">
               position
             </label>
-            <select
+            <Select
               value={config.position}
               onChange={(e) => setConfig({ ...config, position: e.target.value })}
-              className="select select-bordered w-full font-raleway"
             >
               <option value="bottom-right">bottom right</option>
               <option value="bottom-left">bottom left</option>
               <option value="top-right">top right</option>
               <option value="top-left">top left</option>
-            </select>
+            </Select>
           </div>
 
           {/* Theme */}
           <div>
-            <label className="font-raleway font-bold tracking-tighter text-sm opacity-80 mb-2 block">
+            <label className="font-raleway font-bold tracking-tighter text-sm opacity-80 mb-2 block lowercase">
               theme
             </label>
-            <select
+            <Select
               value={config.theme}
               onChange={(e) => setConfig({ ...config, theme: e.target.value })}
-              className="select select-bordered w-full font-raleway"
             >
               <option value="light">light</option>
               <option value="dark">dark</option>
-            </select>
+            </Select>
           </div>
 
           {/* Show Count */}
           <div>
-            <label className="font-raleway font-bold tracking-tighter text-sm opacity-80 mb-2 block">
+            <label className="font-raleway font-bold tracking-tighter text-sm opacity-80 mb-2 block lowercase">
               display
             </label>
             <div className="form-control">
@@ -190,7 +194,7 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
                   onChange={(e) => setConfig({ ...config, showCount: e.target.checked })}
                   className="checkbox checkbox-primary"
                 />
-                <span className="font-lora tracking-tighter opacity-80 text-neutral text-sm">
+                <span className="font-lora tracking-wide opacity-80 text-neutral text-sm lowercase">
                   show update count
                 </span>
               </label>
@@ -199,32 +203,31 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
 
           {/* Days */}
           <div>
-            <label className="font-raleway font-bold tracking-tighter text-sm opacity-80 mb-2 block">
+            <label className="font-raleway font-bold tracking-tighter text-sm opacity-80 mb-2 block lowercase">
               show updates from last
             </label>
-            <select
+            <Select
               value={config.days}
               onChange={(e) => setConfig({ ...config, days: parseInt(e.target.value) })}
-              className="select select-bordered w-full font-raleway"
             >
               <option value={7}>7 days</option>
               <option value={14}>14 days</option>
               <option value={30}>30 days</option>
               <option value={60}>60 days</option>
               <option value={90}>90 days</option>
-            </select>
+            </Select>
           </div>
         </div>
 
         {/* Preview */}
         {showPreview && (
           <div className="bg-base-200 rounded-sm p-6 border border-neutral relative min-h-32">
-            <h3 className="font-raleway font-bold tracking-tighter mb-4">preview</h3>
+            <h3 className="font-raleway font-bold tracking-tighter mb-4 lowercase">preview</h3>
             <div 
               className="relative"
               dangerouslySetInnerHTML={{ __html: generatePreview() }}
             />
-            <p className="font-space tracking-tighter text-sm opacity-60 text-neutral mt-4">
+            <p className="font-space tracking-normal text-sm opacity-60 text-neutral lowercase mt-4">
               this shows how the widget will appear on your website
             </p>
           </div>
@@ -233,38 +236,38 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
         {/* Embed Code */}
         <div>
           <div className="flex justify-between items-center mb-3">
-            <label className="font-raleway font-bold tracking-tighter text-sm opacity-80">
+            <label className="font-raleway font-bold tracking-tighter text-sm opacity-80 lowercase">
               embed code
             </label>
-            <button
+            <Button
               onClick={copyToClipboard}
-              className={`btn btn-sm font-raleway font-bold tracking-tighter ${
-                copied ? 'btn-success' : 'btn-primary'
-              }`}
+              variant={copied ? 'success' : 'primary'}
+              size="sm"
             >
               {copied ? 'copied!' : 'copy code'}
-            </button>
+            </Button>
           </div>
-          <textarea
+          <TextArea
             value={generateEmbedCode()}
             readOnly
-            className="textarea textarea-bordered w-full h-32 font-space text-sm"
+            rows={8}
+            className="font-space text-sm"
           />
         </div>
 
         {/* Implementation Instructions */}
         <div className="bg-base-50 rounded-sm p-4 border border-neutral">
-          <h3 className="font-raleway font-bold tracking-tighter mb-3">
+          <h3 className="font-raleway font-bold tracking-tighter mb-3 lowercase">
             implementation steps
           </h3>
-          <ol className="space-y-2 font-lora tracking-tighter opacity-80 text-neutral text-sm">
+          <ol className="space-y-2 font-lora tracking-wide opacity-80 text-neutral text-sm lowercase">
             <li>1. copy the embed code above</li>
             <li>2. paste it before the closing &lt;/body&gt; tag in your website</li>
             <li>3. the widget will automatically show when you publish new release notes</li>
             <li>4. customers can click the widget to view your full changelog</li>
           </ol>
           <div className="mt-4 p-3 bg-primary/10 rounded border border-primary/20">
-            <p className="font-space tracking-tighter text-sm text-primary">
+            <p className="font-space tracking-normal text-sm text-primary lowercase">
               💡 tip: the widget only appears when you have recent updates, keeping your site clean.
             </p>
           </div>
@@ -272,11 +275,11 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
 
         {/* Testing */}
         <div className="bg-base-50 rounded-sm p-4 border border-neutral">
-          <h3 className="font-raleway font-bold tracking-tighter mb-3">
+          <h3 className="font-raleway font-bold tracking-tighter mb-3 lowercase">
             testing your widget
           </h3>
-          <div className="space-y-2 font-lora tracking-tighter opacity-80 text-neutral text-sm">
-            <p>• widget api: <code className="font-space bg-base-200 px-1 rounded">GET /api/widget/{project.projectSlug}</code></p>
+          <div className="space-y-2 font-lora tracking-wide opacity-80 text-neutral text-sm lowercase">
+            <p>• widget api: <code className="font-space bg-base-200 px-1 rounded border-1 border-neutral">GET /api/widget/{project.projectSlug}</code></p>
             <p>• public changelog: <Link href={`/${project.projectSlug}`} target="_blank" className="link link-primary">shipnotes.dev/{project.projectSlug}</Link></p>
             <p>• the widget will appear on your site within 5 minutes of publishing updates</p>
           </div>

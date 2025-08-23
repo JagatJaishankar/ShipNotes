@@ -49,7 +49,7 @@ export default async function ProjectPage({ params }) {
           <div className="flex items-center space-x-4 mb-4">
             <Link 
               href="/dashboard"
-              className="btn btn-ghost btn-sm font-raleway font-bold tracking-tighter"
+              className="btn btn-ghost btn-sm font-raleway font-extrabold tracking-tighter lowercase"
             >
               ← back to dashboard
             </Link>
@@ -57,14 +57,14 @@ export default async function ProjectPage({ params }) {
           
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="font-raleway font-black tracking-tighter text-4xl">
+              <h1 className="font-raleway font-black tracking-tighter text-4xl lowercase">
                 {project.projectName}
               </h1>
-              <p className="font-space tracking-tighter text-sm opacity-60 text-neutral mt-2">
+              <p className="font-space tracking-normal text-sm opacity-60 text-neutral lowercase mt-2">
                 {project.repository}
               </p>
               {project.description && (
-                <p className="font-lora tracking-tighter opacity-80 text-neutral mt-2">
+                <p className="font-lora tracking-wide opacity-80 text-neutral lowercase mt-2">
                   {project.description}
                 </p>
               )}
@@ -75,7 +75,7 @@ export default async function ProjectPage({ params }) {
                 href={project.repositoryUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-outline btn-sm font-raleway font-bold tracking-tighter"
+                className="btn btn-outline btn-sm font-raleway font-extrabold tracking-tighter lowercase border-1"
               >
                 view on github
               </a>
@@ -83,7 +83,7 @@ export default async function ProjectPage({ params }) {
                 href={`/${project.projectSlug}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-secondary btn-sm font-raleway font-bold tracking-tighter"
+                className="btn btn-secondary btn-sm font-raleway font-extrabold tracking-tighter lowercase border-1 border-neutral"
               >
                 view changelog
               </Link>

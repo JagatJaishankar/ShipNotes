@@ -2,9 +2,9 @@
 // Component for managing drafts and published release notes
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { toasts, showError, showLoading, dismissToast } from "@/lib/toast";
-import ConfirmModal from "@/components/ui/ConfirmModal";
 import Link from "next/link";
+import { toasts, showError, showLoading, dismissToast } from "@/lib/toast";
+import { ConfirmModal, Button, Badge } from "@/components/ui";
 
 export default function ReleaseNotesManager({ project }) {
   const [activeTab, setActiveTab] = useState("drafts");
@@ -86,24 +86,25 @@ export default function ReleaseNotesManager({ project }) {
   const renderNotesList = (notes, type) => {
     if (loading) {
       return (
-        <div className="text-center py-8">
-          <span className="loading loading-spinner loading-md"></span>
-          <p className="font-lora text-sm opacity-60 mt-2">loading {type}...</p>
+        <div className="flex justify-center py-8">
+          <span className="loading loading-spinner loading-lg text-neutral"></span>
         </div>
       );
     }
 
     if (notes.length === 0) {
       return (
-        <div className="text-center py-8">
-          <p className="font-lora tracking-tighter opacity-60">
-            no {type} found
+        <div className="text-center py-16">
+          <div className="text-6xl opacity-50 mb-4">{type === 'drafts' ? '✏️' : '🚀'}</div>
+          <h3 className="font-raleway font-bold tracking-tighter text-xl lowercase opacity-70 mb-2">
+            no {type} yet
+          </h3>
+          <p className="font-lora tracking-wide opacity-80 text-neutral lowercase max-w-md mx-auto">
+            {type === 'drafts' 
+              ? 'create release notes from commits to see drafts here.' 
+              : 'publish your first release note to see it here.'
+            }
           </p>
-          {type === 'drafts' && (
-            <p className="font-lora tracking-tighter text-xs opacity-40 mt-2">
-              create release notes from commits to see drafts here
-            </p>
-          )}
         </div>
       );
     }
@@ -113,40 +114,43 @@ export default function ReleaseNotesManager({ project }) {
         {notes.map((note) => (
           <div
             key={note.id}
-            className="border border-neutral rounded-sm p-4 hover:bg-base-50 transition-colors"
+            className="bg-base-100 border-1 border-base-300 hover:border-neutral rounded-sm p-4 hover:bg-base-200 hover:shadow-md hover:-translate-y-1 transition-all duration-200"
           >
             <div className="flex items-start justify-between mb-2">
               <div className="flex-1">
-                <h3 className="font-raleway font-bold tracking-tighter text-lg">
-                  {note.title}
+                <h3 className="font-raleway font-bold tracking-tighter text-lg lowercase">
+                  {note.title} {/* Keep user content in original case */}
                 </h3>
                 <div className="flex items-center space-x-4 mt-2">
-                  <p className="font-space text-xs opacity-60">
+                  <p className="font-space text-xs opacity-60 lowercase">
                     created: {formatDate(note.createdAt)}
                   </p>
                   {note.updatedAt !== note.createdAt && (
-                    <p className="font-space text-xs opacity-60">
+                    <p className="font-space text-xs opacity-60 lowercase">
                       updated: {formatDate(note.updatedAt)}
                     </p>
                   )}
                   {note.publishedAt && (
-                    <p className="font-space text-xs opacity-60">
+                    <p className="font-space text-xs opacity-60 lowercase">
                       published: {formatDate(note.publishedAt)}
                     </p>
                   )}
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                <span className={`badge ${type === 'drafts' ? 'badge-warning' : 'badge-success'} badge-sm`}>
+                <Badge 
+                  variant={type === 'drafts' ? 'warning' : 'success'}
+                  size="sm"
+                >
                   {type === 'drafts' ? 'draft' : 'published'}
-                </span>
+                </Badge>
               </div>
             </div>
 
             {/* Content Preview */}
             <div className="mb-3">
-              <p className="font-lora text-sm opacity-80 line-clamp-3">
-                {note.content.substring(0, 200)}
+              <p className="font-lora tracking-wide text-sm opacity-80 line-clamp-3">
+                {note.content.substring(0, 200)} {/* Keep user content in original case */}
                 {note.content.length > 200 && "..."}
               </p>
             </div>
@@ -156,28 +160,30 @@ export default function ReleaseNotesManager({ project }) {
               <div className="flex space-x-2">
                 <Link
                   href={`/edit/${note.id}`}
-                  className="btn btn-primary btn-sm font-raleway font-bold tracking-tighter"
+                  className="btn btn-primary btn-sm font-raleway font-extrabold tracking-tighter lowercase border-1 border-neutral"
                 >
                   {type === 'drafts' ? 'continue editing' : 'edit'}
                 </Link>
                 {type === 'published' && (
-                  <button
+                  <Button
                     onClick={() => copyReleaseNoteLink(note)}
-                    className="btn btn-secondary btn-sm font-raleway tracking-tighter"
+                    variant="secondary"
+                    size="sm"
                   >
                     copy link
-                  </button>
+                  </Button>
                 )}
               </div>
-              <button
+              <Button
                 onClick={() => {
                   setNoteToDelete(note);
                   setShowDeleteModal(true);
                 }}
-                className="btn btn-error btn-sm font-raleway tracking-tighter"
+                variant="error"
+                size="sm"
               >
                 delete
-              </button>
+              </Button>
             </div>
           </div>
         ))}
@@ -186,30 +192,37 @@ export default function ReleaseNotesManager({ project }) {
   };
 
   return (
-    <div className="border border-neutral rounded-sm p-6">
-      <h2 className="font-raleway font-bold text-xl tracking-tighter mb-4">
+    <div>
+      <h2 className="font-raleway font-bold text-xl tracking-tighter lowercase mb-4">
         release notes
       </h2>
 
       {/* Tabs */}
-      <div className="tabs tabs-bordered mb-6">
-        <button
-          onClick={() => setActiveTab("drafts")}
-          className={`tab ${activeTab === "drafts" ? "tab-active" : ""} font-raleway font-bold tracking-tighter`}
-        >
-          drafts ({drafts.length})
-        </button>
-        <button
-          onClick={() => setActiveTab("published")}
-          className={`tab ${activeTab === "published" ? "tab-active" : ""} font-raleway font-bold tracking-tighter`}
-        >
-          published ({published.length})
-        </button>
-      </div>
+      <div className="tabs tabs-lift mb-6">
+        <input 
+          type="radio" 
+          name="notes_tabs" 
+          className="tab font-raleway lowercase font-extrabold" 
+          aria-label={`drafts (${drafts.length})`}
+          checked={activeTab === 'drafts'}
+          onChange={() => setActiveTab('drafts')}
+        />
+        <div className="tab-content bg-base-100 border-base-300 p-6">
+          {renderNotesList(drafts, "drafts")}
+        </div>
 
-      {/* Content */}
-      {activeTab === "drafts" && renderNotesList(drafts, "drafts")}
-      {activeTab === "published" && renderNotesList(published, "published")}
+        <input 
+          type="radio" 
+          name="notes_tabs" 
+          className="tab font-raleway lowercase font-extrabold" 
+          aria-label={`published (${published.length})`}
+          checked={activeTab === 'published'}
+          onChange={() => setActiveTab('published')}
+        />
+        <div className="tab-content bg-base-100 border-base-300 p-6">
+          {renderNotesList(published, "published")}
+        </div>
+      </div>
 
       {/* Delete Confirmation Modal */}
       <ConfirmModal

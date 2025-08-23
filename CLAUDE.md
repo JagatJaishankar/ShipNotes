@@ -11,7 +11,7 @@
 
 ## technical stack
 
-- **database:** MongoDM Atlas with Mongoose
+- **database:** MongoDB Atlas with Mongoose
 - **frontend/backend:** Next.js 15.4 with app router
 - **authentication:** NextAuth.js with GitHub OAuth
 - **styling:** Tailwind CSS + DaisyUI components
@@ -26,7 +26,7 @@
 
 - DaisyUI hero text classes
 - bold, clear hierarchy
-- use "raleway" font: `font-relaway font-black tracking-tighter text-4xl`
+- use "raleway" font: `font-raleway font-black tracking-tighter text-4xl`
 
 **sub headings:**
 
@@ -299,42 +299,54 @@ commit data: [commit messages, files changed, pr titles]
   /api
     /auth/[...nextauth]/route.js
     /github/commits/route.js
+    /github/repositories/route.js
     /openai/generate/route.js
     /projects/route.js
-    /release-notes/route.js
+    /projects/[projectId]/route.js
+    /patch-notes/route.js
+    /patch-notes/[noteId]/route.js
+    /patch-notes/[noteId]/view/route.js
+    /feedback/route.js
+    /user/credits/route.js
     /widget/[projectSlug]/route.js
   /components
-    /ui (reusable DaisyUI components)
-      /Button.js
-      /Card.js
-      /Modal.js
+    /ui
+      /ConfirmModal.js
     /dashboard
-      /ProjectList.js
-      /ProjectCard.js
-      /CreateProjectForm.js
+      /DashboardClient.js
+      /CreateProjectModal.js
+      /DashboardCredits.js
+      /RepositorySelector.js
     /project
       /CommitSelector.js
-      /CommitPreview.js
-      /ReleaseNotesList.js
+      /ProjectClient.js
+      /ProjectSettings.js
+      /ReleaseNotesManager.js
       /WidgetGenerator.js
     /editor
       /ReleaseNoteEditor.js
-      /MarkdownPreview.js
     /layout
       /Navbar.js
-      /Footer.js
+      /LogoutButton.js
+    /changelog
+      /PublicChangelog.js
+    /feedback
+      /FeedbackForm.js
+    /settings
+      /DeleteAccountButton.js
 
 /lib
-  /mongodb.js
+  /mongoose.js
   /github-api.js
-  /openai.js
-  /auth.js
-  /utils.js
+  /toast.js
 
 /models
   /User.js
   /Project.js
   /PatchNote.js
+  /Feedback.js
+
+/auth.js
 ```
 
 ### coding standards
@@ -360,19 +372,19 @@ commit data: [commit messages, files changed, pr titles]
 
 ```bash
 # database
-mongodb_uri=
+MONGODB_URI=
 
 # authentication
-nextauth_secret=
-github_client_id=
-github_client_secret=
+AUTH_SECRET=
+AUTH_GITHUB_ID=
+AUTH_GITHUB_SECRET=
 
 # ai
-openai_api_key=
+OPENAI_API_KEY=
 
 # app
-node_env=http://localhost:3000
-next_public_app_url=https://shipnotes.dev
+NODE_ENV=development
+NEXT_PUBLIC_APP_URL=https://shipnotes.dev
 ```
 
 ## credit system

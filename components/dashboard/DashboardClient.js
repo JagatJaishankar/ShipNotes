@@ -2,15 +2,19 @@
 // Client-side dashboard component for managing projects
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Link from "next/link";
 import CreateProjectModal from "./CreateProjectModal";
-import ConfirmModal from "@/components/ui/ConfirmModal";
-import { toasts } from "@/lib/toast";
+import { ConfirmModal } from "@/components/ui";
+import { toasts, showSuccess } from "@/lib/toast";
 
 export default function DashboardClient({ session }) {
   const [projects, setProjects] = useState([]);
   const [drafts, setDrafts] = useState([]);
+  const [publishedNotes, setPublishedNotes] = useState([]);
   const [isLoadingProjects, setIsLoadingProjects] = useState(true);
   const [isLoadingDrafts, setIsLoadingDrafts] = useState(true);
+  const [isLoadingPublished, setIsLoadingPublished] = useState(true);
+  const [activeTab, setActiveTab] = useState('projects');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmModal, setConfirmModal] = useState({ isOpen: false, draftId: null, title: '' });
 
@@ -18,6 +22,7 @@ export default function DashboardClient({ session }) {
   useEffect(() => {
     fetchProjects();
     fetchDrafts();
+    fetchPublishedNotes();
   }, []);
 
   const fetchProjects = async () => {
@@ -39,6 +44,17 @@ export default function DashboardClient({ session }) {
       console.error("❌ Error fetching drafts:", error);
     } finally {
       setIsLoadingDrafts(false);
+    }
+  };
+
+  const fetchPublishedNotes = async () => {
+    try {
+      const response = await axios.get("/api/patch-notes?status=published&limit=10");
+      setPublishedNotes(response.data.patchNotes);
+    } catch (error) {
+      console.error("❌ Error fetching published notes:", error);
+    } finally {
+      setIsLoadingPublished(false);
     }
   };
 
@@ -72,151 +88,231 @@ export default function DashboardClient({ session }) {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Projects Section */}
-      <div className="border border-neutral rounded-sm p-4">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="font-raleway font-bold text-xl tracking-tighter">
-            your projects
-          </h2>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="btn btn-primary font-raleway font-bold tracking-tighter"
-          >
-            create project
-          </button>
-        </div>
-
-        {isLoadingProjects ? (
-          <div className="flex justify-center py-8">
-            <span className="loading loading-spinner loading-lg"></span>
+    <div>
+      {/* Dashboard Tabs */}
+      <div className="tabs tabs-lift">
+        <input 
+          type="radio" 
+          name="dashboard_tabs" 
+          className="tab font-raleway lowercase font-extrabold" 
+          aria-label="projects" 
+          checked={activeTab === 'projects'}
+          onChange={() => setActiveTab('projects')}
+        />
+        <div className="tab-content bg-base-100 border-base-300 p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="font-raleway font-bold tracking-tighter text-xl lowercase">your projects</h3>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="btn btn-primary font-raleway font-extrabold tracking-tighter lowercase border-1 border-neutral"
+            >
+              create project
+            </button>
           </div>
-        ) : projects.length === 0 ? (
-          <div className="text-center py-8">
-            <p className="font-lora tracking-tighter opacity-80 text-neutral mb-4">
-              no projects yet. create your first project to get started with automated release notes.
-            </p>
-          </div>
-        ) : (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project) => (
-              <div
-                key={project._id}
-                className="border border-neutral rounded-sm p-4 hover:bg-base-200 transition-colors cursor-pointer"
-                onClick={() => {
-                  // Navigate to project page (we'll build this next)
-                  window.location.href = `/project/${project.projectSlug}`;
-                }}
+          
+          {isLoadingProjects ? (
+            <div className="flex justify-center py-8">
+              <span className="loading loading-spinner loading-lg text-neutral"></span>
+            </div>
+          ) : projects.length === 0 ? (
+            <div className="text-center py-16">
+              <div className="text-6xl opacity-50 mb-4">🚀</div>
+              <h3 className="font-raleway font-bold tracking-tighter text-xl lowercase opacity-70 mb-2">no projects yet</h3>
+              <p className="font-lora tracking-wide opacity-80 text-neutral lowercase max-w-md mx-auto mb-4">
+                create your first project to start generating beautiful release notes from your github commits.
+              </p>
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="btn btn-primary font-raleway font-extrabold tracking-tighter lowercase border-1 border-neutral"
               >
-                <h3 className="font-raleway font-bold text-lg tracking-tighter mb-2">
-                  {project.projectName}
-                </h3>
-                <p className="font-space tracking-tighter text-sm opacity-60 text-neutral mb-2">
-                  {project.repository}
-                </p>
-                {project.description && (
-                  <p className="font-lora tracking-tighter opacity-80 text-neutral text-sm">
-                    {project.description}
-                  </p>
-                )}
-                <div className="mt-3 flex justify-between items-center">
-                  <span className="badge badge-success font-space text-xs">
-                    active
-                  </span>
-                  <span className="font-space tracking-tighter text-xs opacity-60">
-                    {new Date(project.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Drafts Section */}
-      <div className="border border-neutral rounded-sm p-4">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="font-raleway font-bold text-xl tracking-tighter">
-            your drafts
-          </h2>
-          <span className="font-space tracking-tighter text-sm opacity-60 text-neutral">
-            {drafts.length} draft{drafts.length !== 1 ? 's' : ''}
-          </span>
-        </div>
-
-        {isLoadingDrafts ? (
-          <div className="flex justify-center py-8">
-            <span className="loading loading-spinner loading-lg"></span>
-          </div>
-        ) : drafts.length === 0 ? (
-          <div className="text-center py-8">
-            <p className="font-lora tracking-tighter opacity-80 text-neutral mb-2">
-              no drafts found.
-            </p>
-            <p className="font-space tracking-tighter text-sm opacity-60 text-neutral">
-              drafts are automatically saved when you generate release notes
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {drafts.map((draft) => (
-              <div
-                key={draft.id}
-                className="border border-neutral rounded-sm p-4 hover:bg-base-200 transition-colors"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-raleway font-bold text-lg tracking-tighter mb-1 truncate">
-                      {draft.title}
-                    </h3>
-                    <div className="flex items-center space-x-4 mb-2">
-                      <span className="font-space tracking-tighter text-sm opacity-60 text-neutral">
-                        {draft.project?.name || 'Unknown Project'}
+                create your first project
+              </button>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {projects.map((project) => (
+                <div
+                  key={project._id || project.id}
+                  className="bg-base-100 hover:bg-base-200 rounded-sm border-1 border-base-300 hover:border-neutral hover:shadow-md hover:-translate-y-1 transition-all duration-200 cursor-pointer"
+                  onClick={() => window.location.href = `/project/${project.projectSlug}`}
+                >
+                  <div className="px-4 pt-4">
+                    <div className="flex justify-between items-start">
+                      <h3 className="font-raleway font-bold tracking-tighter text-lg lowercase">{project.projectName}</h3>
+                      <span className="badge font-space tracking-normal lowercase border-1 border-neutral badge-success">active</span>
+                    </div>
+                  </div>
+                  <div className="px-4 pt-2 pb-4">
+                    <p className="font-space tracking-normal opacity-60 text-neutral lowercase text-sm mb-3">{project.repository}</p>
+                    {project.description && (
+                      <p className="font-lora tracking-wide opacity-80 text-neutral lowercase text-sm mb-4 line-clamp-3">
+                        {project.description}
+                      </p>
+                    )}
+                    <div className="flex justify-between items-center">
+                      <span className="font-space tracking-normal text-xs lowercase opacity-60">
+                        created {new Date(project.createdAt).toLocaleDateString()}
                       </span>
-                      <span className="font-space tracking-tighter text-sm opacity-60 text-neutral">
-                        {new Date(draft.updatedAt).toLocaleDateString('en-US', {
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <input 
+          type="radio" 
+          name="dashboard_tabs" 
+          className="tab font-raleway lowercase font-extrabold" 
+          aria-label="drafts"
+          checked={activeTab === 'drafts'}
+          onChange={() => setActiveTab('drafts')}
+        />
+        <div className="tab-content bg-base-100 border-base-300 p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="font-raleway font-bold tracking-tighter text-xl lowercase">draft release notes</h3>
+            <span className="badge badge-warning font-space tracking-normal lowercase border-1 border-neutral text-xs">
+              {drafts.length} draft{drafts.length !== 1 ? 's' : ''}
+            </span>
+          </div>
+          
+          {isLoadingDrafts ? (
+            <div className="flex justify-center py-8">
+              <span className="loading loading-spinner loading-lg text-neutral"></span>
+            </div>
+          ) : drafts.length === 0 ? (
+            <div className="text-center py-16">
+              <div className="text-6xl opacity-50 mb-4">✍️</div>
+              <h3 className="font-raleway font-bold tracking-tighter text-xl lowercase opacity-70 mb-2">no drafts yet</h3>
+              <p className="font-lora tracking-wide opacity-80 text-neutral lowercase max-w-md mx-auto">
+                draft release notes will appear here as you create them. they'll be saved automatically.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {drafts.map((draft) => (
+                <div key={draft._id || draft.id} className="bg-base-100 rounded-sm border border-neutral p-4">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="font-raleway font-bold tracking-tighter text-lg lowercase">{draft.title}</h3>
+                      <p className="font-space tracking-normal opacity-60 text-neutral lowercase text-sm">
+                        {draft.project?.name || 'unknown project'} • last edited {new Date(draft.updatedAt).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
                           hour: '2-digit',
                           minute: '2-digit',
                         })}
-                      </span>
-                      <span className="badge badge-secondary font-space text-xs">
-                        draft
-                      </span>
+                      </p>
                     </div>
-                    <p className="font-lora tracking-tighter opacity-80 text-neutral text-sm">
-                      {draft.content.slice(0, 150)}{draft.content.length > 150 ? '...' : ''}
-                    </p>
+                    <span className="badge badge-warning font-space tracking-normal lowercase border-1 border-neutral">draft</span>
                   </div>
-                  
-                  <div className="flex items-center space-x-2 ml-4">
-                    <button
-                      onClick={() => handleContinueEditing(draft.id)}
-                      className="btn btn-primary btn-sm font-raleway font-bold tracking-tighter"
-                    >
-                      continue editing
-                    </button>
-                    <button
-                      onClick={() => openDeleteConfirm(draft.id, draft.title)}
-                      className="btn btn-error btn-outline btn-sm font-raleway font-bold tracking-tighter"
-                    >
-                      delete
-                    </button>
-                  </div>
-                </div>
-                
-                {draft.commits && draft.commits.length > 0 && (
-                  <div className="mt-3 pt-3 border-t border-neutral">
-                    <span className="font-space tracking-tighter text-xs opacity-60 text-neutral">
-                      includes {draft.commits.length} commit{draft.commits.length !== 1 ? 's' : ''}
+                  <p className="font-lora tracking-wide opacity-80 text-neutral lowercase text-sm mb-4">
+                    {draft.content.slice(0, 200)}{draft.content.length > 200 ? '...' : ''}
+                  </p>
+                  <div className="flex justify-between items-center">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleContinueEditing(draft.id)}
+                        className="btn btn-sm btn-primary font-raleway font-extrabold tracking-tighter lowercase border-1 border-neutral"
+                      >
+                        continue editing
+                      </button>
+                      <Link
+                        href={`/preview/${draft.id}`}
+                        className="btn btn-sm btn-ghost font-raleway font-extrabold tracking-tighter lowercase"
+                      >
+                        preview
+                      </Link>
+                      <button
+                        onClick={() => openDeleteConfirm(draft.id, draft.title)}
+                        className="btn btn-sm btn-outline btn-error font-raleway font-extrabold tracking-tighter lowercase border-1"
+                      >
+                        delete
+                      </button>
+                    </div>
+                    <span className="font-space tracking-normal text-xs lowercase opacity-60">
+                      {draft.commits?.length || 0} commits selected
                     </span>
                   </div>
-                )}
-              </div>
-            ))}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <input 
+          type="radio" 
+          name="dashboard_tabs" 
+          className="tab font-raleway lowercase font-extrabold" 
+          aria-label="published"
+          checked={activeTab === 'published'}
+          onChange={() => setActiveTab('published')}
+        />
+        <div className="tab-content bg-base-100 border-base-300 p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="font-raleway font-bold tracking-tighter text-xl lowercase">published release notes</h3>
+            <span className="badge badge-success font-space tracking-normal lowercase border-1 border-neutral text-xs">
+              {publishedNotes.length} published
+            </span>
           </div>
-        )}
+          
+          {isLoadingPublished ? (
+            <div className="flex justify-center py-8">
+              <span className="loading loading-spinner loading-lg text-neutral"></span>
+            </div>
+          ) : publishedNotes.length === 0 ? (
+            <div className="text-center py-16">
+              <div className="text-6xl opacity-50 mb-4">🚀</div>
+              <h3 className="font-raleway font-bold tracking-tighter text-xl lowercase opacity-70 mb-2">no published notes yet</h3>
+              <p className="font-lora tracking-wide opacity-80 text-neutral lowercase max-w-md mx-auto">
+                published release notes will appear here. create and publish your first release notes to get started.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {publishedNotes.map((note) => (
+                <div key={note._id || note.id} className="bg-base-100 rounded-sm border border-neutral p-4">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="font-raleway font-bold tracking-tighter text-lg lowercase">{note.title}</h3>
+                      <p className="font-space tracking-normal opacity-60 text-neutral lowercase text-sm">
+                        published {new Date(note.publishedAt).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric'
+                        })}
+                      </p>
+                    </div>
+                    <span className="badge badge-success font-space tracking-normal lowercase border-1 border-neutral">published</span>
+                  </div>
+                  <p className="font-lora tracking-wide opacity-80 text-neutral lowercase text-sm mb-4">
+                    {note.content.slice(0, 200)}{note.content.length > 200 ? '...' : ''}
+                  </p>
+                  <div className="flex justify-between items-center">
+                    <div className="flex gap-2">
+                      <Link 
+                        href={`/${note.project?.projectSlug || 'unknown'}`}
+                        className="btn btn-primary font-raleway font-extrabold tracking-tighter lowercase border-1 border-neutral"
+                      >
+                        view changelog
+                      </Link>
+                      <button 
+                        onClick={() => showSuccess('analytics feature coming soon!')}
+                        className="btn btn-outline font-raleway font-extrabold tracking-tighter lowercase border-1"
+                      >
+                        analytics
+                      </button>
+                    </div>
+                    <span className="font-space tracking-normal text-xs lowercase opacity-60">
+                      {note.viewCount || 0} views
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Create Project Modal */}
