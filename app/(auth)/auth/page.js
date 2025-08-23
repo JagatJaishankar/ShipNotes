@@ -1,5 +1,6 @@
 import { auth, signIn } from "@/auth";
 import { redirect } from "next/navigation";
+import { SmallScreenMessage } from "@/components/ui";
 
 export default async function Auth() {
   const session = await auth();
@@ -11,6 +12,7 @@ export default async function Auth() {
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-base-100">
+      <SmallScreenMessage />
       <section className="border border-neutral rounded-sm p-8 max-w-md w-full mx-4">
         <div className="text-center space-y-6">
           {/* Logo/Title */}

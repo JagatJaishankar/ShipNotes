@@ -2,6 +2,7 @@
 // Demo page to showcase all design system components
 import React, { useState } from "react";
 import Image from "next/image";
+import { SmallScreenMessage } from "@/components/ui";
 
 // Import all components from our design system (you'll need to copy these individual components)
 // For now, I'll include the components inline for the demo
@@ -788,6 +789,7 @@ export default function DesignSystemDemo() {
 
   return (
     <main className="min-h-screen bg-base-100 p-6">
+      <SmallScreenMessage />
       <div className="max-w-6xl mx-auto space-y-12">
         {/* Header */}
         <div className="text-center space-y-4">

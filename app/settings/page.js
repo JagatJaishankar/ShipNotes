@@ -7,6 +7,7 @@ import Project from "@/models/Project";
 import Navbar from "@/components/layout/Navbar";
 import DeleteAccountButton from "@/components/settings/DeleteAccountButton";
 import Link from "next/link";
+import { SmallScreenMessage } from "@/components/ui";
 
 export default async function SettingsPage() {
   const session = await auth();
@@ -40,6 +41,7 @@ export default async function SettingsPage() {
 
   return (
     <main className="min-h-screen bg-base-100 px-6 py-2">
+      <SmallScreenMessage />
       <Navbar session={session} />
 
       <section className="rounded-sm mt-4 max-w-5xl mx-auto">

@@ -6,3 +6,4 @@ export { Badge } from './Badge';
 export { Table, TableHead, TableBody, TableRow, TableCell, TableHeader } from './Table';
 export { Input, TextArea, Select } from './Input';
 export { default as ConfirmModal } from './ConfirmModal';
+export { default as SmallScreenMessage } from './SmallScreenMessage';

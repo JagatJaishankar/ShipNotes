@@ -7,6 +7,7 @@ import Project from "@/models/Project";
 import ReleaseNoteEditor from "@/components/editor/ReleaseNoteEditor";
 import Navbar from "@/components/layout/Navbar";
 import Link from "next/link";
+import { SmallScreenMessage } from "@/components/ui";
 
 export default async function EditPage({ params }) {
   const session = await auth();
@@ -54,6 +55,7 @@ export default async function EditPage({ params }) {
 
   return (
     <main className="min-h-screen bg-base-100 p-6">
+      <SmallScreenMessage />
       <Navbar session={session} />
       
       <section className="border border-neutral rounded-sm p-6 max-w-6xl mx-auto">
