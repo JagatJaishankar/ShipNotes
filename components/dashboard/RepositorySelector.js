@@ -38,7 +38,7 @@ export default function RepositorySelector({ onRepositorySelect, selectedReposit
 
   return (
     <div className="space-y-4">
-      <label className="font-raleway font-bold tracking-tighter text-sm opacity-80 mb-2 block">
+      <label className="font-raleway font-extrabold tracking-tighter text-sm opacity-80 mb-2 block lowercase">
         select repository
       </label>
       
@@ -46,10 +46,10 @@ export default function RepositorySelector({ onRepositorySelect, selectedReposit
         <button
           type="button"
           onClick={() => !disabled && setShowDropdown(!showDropdown)}
-          className="input input-bordered w-full text-left flex items-center justify-between"
+          className="input input-bordered w-full text-left flex items-center justify-between border-1 border-neutral focus:border-neutral font-lora tracking-wide"
           disabled={disabled}
         >
-          <span className="font-space text-sm">
+          <span className="font-space text-sm lowercase">
             {selectedRepository ? selectedRepository.fullName : "choose a repository..."}
           </span>
           <svg
@@ -63,14 +63,14 @@ export default function RepositorySelector({ onRepositorySelect, selectedReposit
         </button>
 
         {showDropdown && !disabled && (
-          <div className="absolute z-10 w-full mt-1 bg-base-100 border border-neutral rounded-sm shadow-lg max-h-screen overflow-y-auto">
+          <div className="absolute z-10 w-full mt-1 bg-base-100 border-1 border-neutral rounded-sm shadow-lg max-h-screen overflow-y-auto">
             {loading ? (
               <div className="p-6 text-center">
                 <span className="loading loading-spinner loading-md"></span>
               </div>
             ) : repositories.length === 0 ? (
               <div className="p-6 text-center">
-                <p className="font-lora text-sm opacity-60">no repositories found</p>
+                <p className="font-lora text-sm opacity-60 lowercase">no repositories found</p>
               </div>
             ) : (
               repositories.slice(0, 50).map((repo) => (
@@ -83,11 +83,11 @@ export default function RepositorySelector({ onRepositorySelect, selectedReposit
                   <div className="flex items-center space-x-3">
                     <span className="text-lg">{repo.isPrivate ? "🔒" : "📁"}</span>
                     <div className="flex-1">
-                      <p className="font-space text-base font-bold">
+                      <p className="font-space text-base font-bold tracking-normal">
                         {repo.fullName}
                       </p>
                       {repo.description && (
-                        <p className="font-lora text-sm opacity-60 mt-1">
+                        <p className="font-lora text-sm opacity-60 mt-1 tracking-wide">
                           {repo.description}
                         </p>
                       )}
@@ -101,15 +101,15 @@ export default function RepositorySelector({ onRepositorySelect, selectedReposit
       </div>
 
       {selectedRepository && (
-        <div className="border border-success rounded-sm p-3 bg-success/5">
+        <div className="border-1 border-success rounded-sm p-3 bg-success/5">
           <div className="flex items-center space-x-2">
             <span>{selectedRepository.isPrivate ? "🔒" : "📁"}</span>
             <div>
-              <p className="font-space text-sm font-bold text-success">
+              <p className="font-space text-sm font-bold text-success tracking-normal">
                 {selectedRepository.fullName}
               </p>
               {selectedRepository.description && (
-                <p className="font-lora text-xs opacity-80">
+                <p className="font-lora text-xs opacity-80 tracking-wide">
                   {selectedRepository.description}
                 </p>
               )}

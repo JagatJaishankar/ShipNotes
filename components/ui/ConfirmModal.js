@@ -6,10 +6,10 @@ export default function ConfirmModal({
   isOpen, 
   onClose, 
   onConfirm, 
-  title = "Confirm Action",
-  message = "Are you sure you want to proceed?",
-  confirmText = "Confirm",
-  cancelText = "Cancel",
+  title = "confirm action",
+  message = "are you sure you want to proceed?",
+  confirmText = "confirm",
+  cancelText = "cancel",
   type = "warning" // warning, error, info
 }) {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -33,17 +33,17 @@ export default function ConfirmModal({
   };
 
   const buttonStyles = {
-    warning: "btn-warning",
-    error: "btn-error",
-    info: "btn-primary"
+    warning: "btn-warning border-1 border-neutral",
+    error: "btn-error border-1 border-neutral",
+    info: "btn-primary border-1 border-neutral"
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-base-100 border border-neutral rounded-sm p-6 max-w-md w-full mx-4">
+      <div className="bg-base-100 border-1 border-neutral rounded-sm p-6 max-w-md w-full mx-4">
         {/* Modal Header */}
         <div className="mb-4">
-          <h2 className="font-raleway font-bold text-xl tracking-tighter mb-2">
+          <h2 className="font-raleway font-extrabold text-xl tracking-tighter lowercase mb-2">
             {title}
           </h2>
         </div>
@@ -54,7 +54,7 @@ export default function ConfirmModal({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
           </svg>
           <div>
-            <div className="font-lora tracking-tighter text-sm">
+            <div className="font-lora tracking-wide text-sm">
               {message}
             </div>
           </div>
@@ -65,14 +65,14 @@ export default function ConfirmModal({
           <button
             onClick={onClose}
             disabled={isProcessing}
-            className="btn btn-outline font-raleway font-bold tracking-tighter"
+            className="btn btn-outline border-1 border-neutral font-raleway font-extrabold tracking-tighter lowercase"
           >
             {cancelText}
           </button>
           <button
             onClick={handleConfirm}
             disabled={isProcessing}
-            className={`btn ${buttonStyles[type]} font-raleway font-bold tracking-tighter`}
+            className={`btn ${buttonStyles[type]} font-raleway font-extrabold tracking-tighter lowercase`}
           >
             {isProcessing ? (
               <>

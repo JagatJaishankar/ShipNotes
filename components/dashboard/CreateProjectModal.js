@@ -64,16 +64,16 @@ export default function CreateProjectModal({ isOpen, onClose, onProjectCreated }
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="bg-base-100 border border-neutral rounded-sm p-6 max-w-3xl w-full mx-4 h-[60vh] overflow-y-auto">
+    <div className="modal modal-open">
+      <div className="modal-box w-11/12 max-w-3xl bg-base-100 border-1 border-neutral rounded-sm h-[70vh] overflow-y-auto">
         {/* Modal Header */}
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="font-raleway font-black tracking-tighter text-2xl">
+        <div className="flex justify-between items-center pb-4 border-b border-base-300 mb-6">
+          <h2 className="font-raleway font-extrabold tracking-tighter text-2xl lowercase">
             create new project
           </h2>
           <button
             onClick={handleClose}
-            className="btn btn-ghost btn-sm"
+            className="btn btn-sm btn-outline border-1 border-neutral rounded-sm"
             disabled={isCreating}
           >
             ✕
@@ -93,7 +93,7 @@ export default function CreateProjectModal({ isOpen, onClose, onProjectCreated }
             <div className="space-y-4">
               <div>
                 <label className="label">
-                  <span className="font-raleway font-bold tracking-tighter">
+                  <span className="font-raleway font-extrabold tracking-tighter lowercase">
                     project name *
                   </span>
                 </label>
@@ -101,28 +101,28 @@ export default function CreateProjectModal({ isOpen, onClose, onProjectCreated }
                   type="text"
                   value={projectName}
                   onChange={(e) => setProjectName(e.target.value)}
-                  className="input input-bordered w-full font-lora"
+                  className="input input-bordered w-full font-lora tracking-wide border-1 border-neutral focus:border-neutral"
                   placeholder="my awesome project"
                   required
                   disabled={isCreating}
                 />
                 {projectName && (
-                  <div className="mt-2 p-2 bg-base-200 rounded border">
+                  <div className="mt-2 p-2 bg-base-200 rounded-sm border-1 border-neutral">
                     {/^[a-zA-Z0-9\s\-_]+$/.test(projectName) ? (
                       <div>
-                        <p className="font-space tracking-tighter text-sm opacity-60">
-                          URL preview: shipnotes.dev/{projectName.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "")}
+                        <p className="font-space tracking-normal text-sm opacity-60 lowercase">
+                          url preview: shipnotes.dev/{projectName.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "")}
                         </p>
-                        <p className="font-space tracking-tighter text-xs opacity-50 mt-1">
+                        <p className="font-space tracking-normal text-xs opacity-50 mt-1 lowercase">
                           ✓ valid project name
                         </p>
                       </div>
                     ) : (
                       <div>
-                        <p className="font-space tracking-tighter text-sm text-error">
-                          ❌ Invalid characters detected
+                        <p className="font-space tracking-normal text-sm text-error lowercase">
+                          ❌ invalid characters detected
                         </p>
-                        <p className="font-space tracking-tighter text-xs opacity-50 mt-1">
+                        <p className="font-space tracking-normal text-xs opacity-50 mt-1 lowercase">
                           only letters, numbers, spaces, hyphens, and underscores allowed
                         </p>
                       </div>
@@ -133,14 +133,14 @@ export default function CreateProjectModal({ isOpen, onClose, onProjectCreated }
 
               <div>
                 <label className="label">
-                  <span className="font-raleway font-bold tracking-tighter">
+                  <span className="font-raleway font-extrabold tracking-tighter lowercase">
                     description
                   </span>
                 </label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="textarea textarea-bordered w-full font-lora"
+                  className="textarea textarea-bordered w-full font-lora tracking-wide border-1 border-neutral focus:border-neutral"
                   placeholder="optional project description"
                   rows={3}
                   disabled={isCreating}
@@ -150,7 +150,7 @@ export default function CreateProjectModal({ isOpen, onClose, onProjectCreated }
               <div className="flex justify-end pt-4">
                 <button
                   onClick={handleCreateProject}
-                  className="btn btn-primary font-raleway font-bold tracking-tighter"
+                  className="btn btn-primary font-raleway font-extrabold tracking-tighter lowercase border-1 border-neutral"
                   disabled={isCreating || !projectName.trim() || !/^[a-zA-Z0-9\s\-_]+$/.test(projectName.trim())}
                 >
                   {isCreating ? (
@@ -167,6 +167,7 @@ export default function CreateProjectModal({ isOpen, onClose, onProjectCreated }
           )}
         </div>
       </div>
+      <div className="modal-backdrop" onClick={handleClose}></div>
     </div>
   );
 }

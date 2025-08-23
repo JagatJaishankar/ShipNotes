@@ -15,7 +15,7 @@ export default function LogoutButton() {
   return (
     <button 
       onClick={handleLogout}
-      className="w-full text-left"
+      className="w-full text-left font-lora tracking-wide lowercase"
     >
       logout
     </button>

@@ -5,8 +5,8 @@ import LogoutButton from "./LogoutButton";
 
 export default function Navbar({ session }) {
   return (
-    <section className="max-w-4xl mx-auto py-2">
-      <div className="bg-base-200 rounded-sm border border-neutral p-2">
+    <section className="max-w-5xl mx-auto py-2">
+      <div className="bg-base-200 rounded-sm border-1 border-neutral p-2">
         <div className="flex flex-row justify-between">
           {/* Left side - Logo and dropdown menu */}
           <div className="flex items-center">
@@ -33,13 +33,17 @@ export default function Navbar({ session }) {
               </div>
               <ul
                 tabIndex={0}
-                className="menu menu-sm dropdown-content bg-base-200 rounded-box z-[1] mt-3 w-52 p-2 font-lora tracking-tighter border border-neutral"
+                className="menu menu-sm dropdown-content bg-base-200 rounded-sm z-[1] mt-3 w-52 p-2 font-lora tracking-wide border-1 border-neutral"
               >
                 <li>
-                  <Link href="/dashboard">dashboard</Link>
+                  <Link href="/dashboard" className="lowercase">
+                    dashboard
+                  </Link>
                 </li>
                 <li>
-                  <Link href="/settings">settings</Link>
+                  <Link href="/settings" className="lowercase">
+                    settings
+                  </Link>
                 </li>
                 <li>
                   <hr className="my-1 border-neutral" />
@@ -49,6 +53,7 @@ export default function Navbar({ session }) {
                     href="https://github.com/anthropics/claude-code/issues"
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="lowercase"
                   >
                     support
                   </a>
@@ -58,6 +63,7 @@ export default function Navbar({ session }) {
                     href="https://shipnotes.dev"
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="lowercase"
                   >
                     about
                   </a>
@@ -72,7 +78,7 @@ export default function Navbar({ session }) {
             </div>
             <Link
               href="/dashboard"
-              className="font-raleway font-extrabold text-2xl tracking-tighter btn btn-ghost"
+              className="font-raleway font-extrabold text-2xl tracking-tighter btn btn-ghost lowercase"
             >
               shipnotes.dev
             </Link>
@@ -81,21 +87,21 @@ export default function Navbar({ session }) {
           {/* Right side - User profile */}
           <div className="flex items-center">
             <Link href="/settings" className="flex items-center space-x-2">
+              <div className="hidden md:block text-end">
+                <p className="font-raleway font-extrabold tracking-tighter text-sm lowercase">
+                  {session?.user?.name || session?.user?.email || "user"}
+                </p>
+                <p className="font-space tracking-normal text-xs opacity-60 lowercase">
+                  {session?.user?.email}
+                </p>
+              </div>
               <Image
                 alt="Profile"
                 src={session?.user?.image || "/placeholder-avatar.svg"}
                 width={40}
                 height={40}
-                className="rounded-sm"
+                className="rounded-sm border-1 border-neutral"
               />
-              <div className="hidden md:block">
-                <p className="font-raleway font-bold tracking-tighter text-sm">
-                  {session?.user?.name || session?.user?.email || 'User'}
-                </p>
-                <p className="font-space tracking-tighter text-xs opacity-60">
-                  {session?.user?.email}
-                </p>
-              </div>
             </Link>
           </div>
         </div>

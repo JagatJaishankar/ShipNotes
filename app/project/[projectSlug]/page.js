@@ -22,9 +22,9 @@ export default async function ProjectPage({ params }) {
 
   // Connect to database and fetch project
   await connectMongo();
-  const project = await Project.findOne({ 
+  const project = await Project.findOne({
     projectSlug: projectSlug,
-    userId: session.user.id 
+    userId: session.user.id,
   }).lean();
 
   // If project not found or doesn't belong to user, redirect to dashboard
@@ -42,19 +42,19 @@ export default async function ProjectPage({ params }) {
   return (
     <main className="min-h-screen bg-base-100 p-6">
       <Navbar session={session} />
-      
+
       <section className="border border-neutral rounded-sm p-6 max-w-6xl mx-auto">
         {/* Project Header */}
         <div className="mb-6">
           <div className="flex items-center space-x-4 mb-4">
-            <Link 
+            <Link
               href="/dashboard"
               className="btn btn-ghost btn-sm font-raleway font-extrabold tracking-tighter lowercase"
             >
               ← back to dashboard
             </Link>
           </div>
-          
+
           <div className="flex justify-between items-start">
             <div>
               <h1 className="font-raleway font-black tracking-tighter text-4xl lowercase">
@@ -69,7 +69,7 @@ export default async function ProjectPage({ params }) {
                 </p>
               )}
             </div>
-            
+
             <div className="flex space-x-2">
               <a
                 href={project.repositoryUrl}
@@ -92,8 +92,8 @@ export default async function ProjectPage({ params }) {
         </div>
 
         {/* Project Management Tabs */}
-        <ProjectClient 
-          project={serializedProject} 
+        <ProjectClient
+          project={serializedProject}
           session={session}
           ProjectSettings={ProjectSettings}
           ReleaseNotesManager={ReleaseNotesManager}

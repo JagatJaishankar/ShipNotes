@@ -175,7 +175,7 @@ export default function ProjectClient({ project, session, ProjectSettings, Relea
             {/* Date Range Selector */}
             <div>
               <div className="flex justify-between items-center mb-4">
-                <h2 className="font-raleway font-bold text-xl tracking-tighter lowercase">
+                <h2 className="font-raleway font-extrabold text-xl tracking-tighter lowercase">
                   select commits
                 </h2>
                 <div className="flex items-center space-x-4">
@@ -198,7 +198,7 @@ export default function ProjectClient({ project, session, ProjectSettings, Relea
 
               {/* Selected Commits Summary */}
               {selectedCommits.length > 0 && (
-                <div className="mb-4 p-3 bg-base-200 rounded-sm">
+                <div className="mb-4 p-3 bg-base-200 rounded-sm border-1 border-neutral">
                   <div className="flex justify-between items-center">
                     <span className="font-lora tracking-wide opacity-80 text-neutral lowercase">
                       {selectedCommits.length} commit{selectedCommits.length !== 1 ? 's' : ''} selected
