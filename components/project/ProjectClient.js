@@ -8,7 +8,12 @@ import { toasts, showError, showLoading, dismissToast } from "@/lib/toast";
 import { useRouter } from "next/navigation";
 import { Select } from "@/components/ui";
 
-export default function ProjectClient({ project, session, ProjectSettings, ReleaseNotesManager }) {
+export default function ProjectClient({
+  project,
+  session,
+  ProjectSettings,
+  ReleaseNotesManager,
+}) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("commits");
   const [currentProject, setCurrentProject] = useState(project);
@@ -34,15 +39,21 @@ export default function ProjectClient({ project, session, ProjectSettings, Relea
   const fetchCommitUsage = useCallback(async () => {
     try {
       // Fetch published commits
-      const publishedResponse = await axios.get(`/api/patch-notes?status=published&projectId=${project._id}`);
+      const publishedResponse = await axios.get(
+        `/api/patch-notes?status=published&projectId=${project._id}`,
+      );
       const publishedNotes = publishedResponse.data.patchNotes || [];
-      const publishedCommitShas = publishedNotes.flatMap(note => note.commits || []);
+      const publishedCommitShas = publishedNotes.flatMap(
+        (note) => note.commits || [],
+      );
       setPublishedCommits(publishedCommitShas);
 
-      // Fetch draft commits  
-      const draftResponse = await axios.get(`/api/patch-notes?status=draft&projectId=${project._id}`);
+      // Fetch draft commits
+      const draftResponse = await axios.get(
+        `/api/patch-notes?status=draft&projectId=${project._id}`,
+      );
       const draftNotes = draftResponse.data.patchNotes || [];
-      const draftCommitShas = draftNotes.flatMap(note => note.commits || []);
+      const draftCommitShas = draftNotes.flatMap((note) => note.commits || []);
       setDraftCommits(draftCommitShas);
     } catch (error) {
       console.error("❌ Error fetching commit usage:", error);
@@ -58,14 +69,14 @@ export default function ProjectClient({ project, session, ProjectSettings, Relea
       // Calculate since date
       const sinceDate = new Date();
       sinceDate.setDate(sinceDate.getDate() - dateRange);
-      
+
       const response = await axios.get("/api/github/commits", {
         params: {
           repository: project.repository,
           since: sinceDate.toISOString(),
         },
       });
-      
+
       setCommits(response.data.commits);
     } catch (error) {
       console.error("❌ Error fetching commits:", error);
@@ -83,10 +94,10 @@ export default function ProjectClient({ project, session, ProjectSettings, Relea
   }, [dateRange, fetchCommits, checkPublishedNotes, fetchCommitUsage]);
 
   const handleCommitToggle = (commit) => {
-    setSelectedCommits(prev => {
-      const isSelected = prev.some(c => c.sha === commit.sha);
+    setSelectedCommits((prev) => {
+      const isSelected = prev.some((c) => c.sha === commit.sha);
       if (isSelected) {
-        return prev.filter(c => c.sha !== commit.sha);
+        return prev.filter((c) => c.sha !== commit.sha);
       } else {
         return [...prev, commit];
       }
@@ -101,7 +112,7 @@ export default function ProjectClient({ project, session, ProjectSettings, Relea
 
     setIsGenerating(true);
     const loadingToast = toasts.generating();
-    
+
     try {
       const response = await axios.post("/api/openai/generate", {
         projectId: project._id,
@@ -117,13 +128,15 @@ export default function ProjectClient({ project, session, ProjectSettings, Relea
           window.location.href = `/edit/${response.data.patchNote.id}`;
         }, 500);
       } else {
-        throw new Error(response.data.error || "Failed to generate release notes");
+        throw new Error(
+          response.data.error || "Failed to generate release notes",
+        );
       }
     } catch (error) {
       console.error("❌ Error generating release notes:", error);
-      
+
       dismissToast(loadingToast);
-      
+
       // Handle no credits scenario
       if (error.response?.data?.errorType === "no_credits") {
         showError(error.response.data.error);
@@ -133,13 +146,13 @@ export default function ProjectClient({ project, session, ProjectSettings, Relea
         }, 2000);
         return;
       }
-      
+
       // Handle other error messages
       let errorMessage = "Failed to generate release notes. Please try again.";
       if (error.response?.data?.error) {
         errorMessage = error.response.data.error;
       }
-      
+
       showError(errorMessage);
     } finally {
       setIsGenerating(false);
@@ -155,53 +168,49 @@ export default function ProjectClient({ project, session, ProjectSettings, Relea
   };
 
   const handleProjectDelete = () => {
-    router.push('/dashboard');
+    router.push("/dashboard");
   };
 
   return (
-    <div className="space-y-6">
+    <div className="">
       {/* Navigation Tabs */}
       <div className="tabs tabs-lift">
-        <input 
-          type="radio" 
-          name="project_tabs" 
-          className="tab font-raleway lowercase font-extrabold" 
-          aria-label="generate release notes" 
-          checked={activeTab === 'commits'}
-          onChange={() => setActiveTab('commits')}
+        <input
+          type="radio"
+          name="project_tabs"
+          className="tab font-raleway lowercase font-extrabold"
+          aria-label="generate release notes"
+          checked={activeTab === "commits"}
+          onChange={() => setActiveTab("commits")}
         />
-        <div className="tab-content bg-base-100 border-base-300 p-6">
-          <div className="space-y-6">
+        <div className="tab-content bg-base-100 border-base-300 p-4">
+          <div className="">
             {/* Date Range Selector */}
             <div>
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="font-raleway font-extrabold text-xl tracking-tighter lowercase">
+              <div className="flex flex-row justify-between items-center mb-4">
+                <h2 className="flex-3/4 font-raleway font-extrabold text-xl tracking-tighter lowercase">
                   select commits
                 </h2>
-                <div className="flex items-center space-x-4">
-                  <span className="font-lora tracking-wide opacity-80 text-neutral lowercase text-sm">
-                    show commits from last:
-                  </span>
-                  <Select
-                    value={dateRange}
-                    onChange={(e) => setDateRange(Number(e.target.value))}
-                    className="select-sm"
-                  >
-                    <option value={7}>7 days</option>
-                    <option value={14}>14 days</option>
-                    <option value={30}>30 days</option>
-                    <option value={60}>60 days</option>
-                    <option value={90}>90 days</option>
-                  </Select>
-                </div>
+                <Select
+                  value={dateRange}
+                  onChange={(e) => setDateRange(Number(e.target.value))}
+                  className="select-sm flex-1/4"
+                >
+                  <option value={7}>7 days</option>
+                  <option value={14}>14 days</option>
+                  <option value={30}>30 days</option>
+                  <option value={60}>60 days</option>
+                  <option value={90}>90 days</option>
+                </Select>
               </div>
 
               {/* Selected Commits Summary */}
               {selectedCommits.length > 0 && (
                 <div className="mb-4 p-3 bg-base-200 rounded-sm border-1 border-neutral">
                   <div className="flex justify-between items-center">
-                    <span className="font-lora tracking-wide opacity-80 text-neutral lowercase">
-                      {selectedCommits.length} commit{selectedCommits.length !== 1 ? 's' : ''} selected
+                    <span className="font-lora text-sm tracking-wide opacity-80 text-neutral lowercase">
+                      {selectedCommits.length} commit
+                      {selectedCommits.length !== 1 ? "s" : ""} selected
                     </span>
                     <button
                       onClick={handleGenerateReleaseNotes}
@@ -235,50 +244,49 @@ export default function ProjectClient({ project, session, ProjectSettings, Relea
           </div>
         </div>
 
-        <input 
-          type="radio" 
-          name="project_tabs" 
-          className="tab font-raleway lowercase font-extrabold" 
-          aria-label="manage release notes" 
-          checked={activeTab === 'notes'}
-          onChange={() => setActiveTab('notes')}
+        <input
+          type="radio"
+          name="project_tabs"
+          className="tab font-raleway lowercase font-extrabold"
+          aria-label="manage release notes"
+          checked={activeTab === "notes"}
+          onChange={() => setActiveTab("notes")}
         />
-        <div className="tab-content bg-base-100 border-base-300 p-6">
+        <div className="tab-content bg-base-100 border-base-300 p-4">
           <ReleaseNotesManager project={currentProject} />
         </div>
 
-        <input 
-          type="radio" 
-          name="project_tabs" 
-          className="tab font-raleway lowercase font-extrabold" 
-          aria-label="widget & integration" 
-          checked={activeTab === 'widget'}
-          onChange={() => setActiveTab('widget')}
+        <input
+          type="radio"
+          name="project_tabs"
+          className="tab font-raleway lowercase font-extrabold"
+          aria-label="widget & integration"
+          checked={activeTab === "widget"}
+          onChange={() => setActiveTab("widget")}
         />
-        <div className="tab-content bg-base-100 border-base-300 p-6">
-          <WidgetGenerator 
-            project={currentProject} 
+        <div className="tab-content bg-base-100 border-base-300 p-4">
+          <WidgetGenerator
+            project={currentProject}
             hasPublishedNotes={hasPublishedNotes}
           />
         </div>
 
-        <input 
-          type="radio" 
-          name="project_tabs" 
-          className="tab font-raleway lowercase font-extrabold" 
-          aria-label="project settings" 
-          checked={activeTab === 'settings'}
-          onChange={() => setActiveTab('settings')}
+        <input
+          type="radio"
+          name="project_tabs"
+          className="tab font-raleway lowercase font-extrabold"
+          aria-label="project settings"
+          checked={activeTab === "settings"}
+          onChange={() => setActiveTab("settings")}
         />
-        <div className="tab-content bg-base-100 border-base-300 p-6">
-          <ProjectSettings 
-            project={currentProject} 
+        <div className="tab-content bg-base-100 border-base-300 p-4">
+          <ProjectSettings
+            project={currentProject}
             onProjectUpdate={handleProjectUpdate}
             onProjectDelete={handleProjectDelete}
           />
         </div>
       </div>
-
     </div>
   );
 }

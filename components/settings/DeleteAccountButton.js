@@ -9,7 +9,7 @@ export default function DeleteAccountButton() {
 
   return (
     <button
-      className="btn btn-error btn-outline btn-sm font-raleway font-extrabold tracking-tighter lowercase border-1 border-neutral"
+      className="btn btn-error btn-sm font-raleway font-extrabold tracking-tighter lowercase border-1 border-neutral"
       onClick={handleDeleteAccount}
     >
       delete account

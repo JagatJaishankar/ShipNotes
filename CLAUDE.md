@@ -22,50 +22,70 @@
 
 ## styling approach
 
+**IMPORTANT: design system source of truth is `/components/ui/` and `/app/design-system/page.js` - NOT this file**
+
 **main headings:**
 
-- DaisyUI hero text classes
-- bold, clear hierarchy
-- use "raleway" font: `font-raleway font-black tracking-tighter text-4xl`
+- DaisyUI hero text classes with consistent hierarchy
+- use "raleway" font: `font-raleway font-extrabold tracking-tighter text-4xl lowercase`
+- page headings: `font-raleway font-extrabold tracking-tighter text-4xl mb-2 lowercase`
 
 **sub headings:**
 
-- secondary text with proper spacing
-- consistent font weights
-- use "raleway" font: `font-raleway font-bold text-xl tracking-tighter`
+- secondary text with proper spacing and consistent font weights
+- use "raleway" font: `font-raleway font-extrabold text-xl tracking-tighter lowercase`
+- section headings: `font-raleway font-extrabold text-xl tracking-tighter mb-4 lowercase`
+- card headings: `font-raleway font-extrabold tracking-tighter text-lg lowercase`
 
-**body text**
+**body text:**
 
-- customer-facing content use "lora" - `font-lora tracking-tighter opacity-80 text-neutral`
-- technical/developer content use "space mono" - `font-space tracking-tighter text-sm opacity-60 text-neutral`
-- code snippets and commit messages use "space mono" - `font-space tracking-tighter opacity-80 text-neutral`
+- customer-facing content use "lora": `font-lora tracking-wide opacity-80 text-neutral lowercase`
+- technical/developer content use "space mono": `font-space tracking-normal text-sm opacity-60 text-neutral lowercase`
+- code snippets and commit messages use "space mono": `font-space tracking-normal opacity-80 text-neutral`
+- labels use "raleway": `font-raleway font-extrabold tracking-tighter text-sm opacity-80 mb-2 block lowercase`
 
 **color palette:**
 
 - primary: for main CTAs and branding
 - neutral: for main texts and borders
 - secondary: for less important actions
-- success: for published status
-- error: for any errors
+- success: for published/active status
+- error: for errors and danger zones
 - base-100 and base-200: for backgrounds
 
-**misc note:**
+**borders and spacing:**
 
-- sections must be wrapped in borders `border boder-1 border-neutral rounded-sm`
-- no shadows
-- no gradients
-- design like bento boxes is brand appropriate
-- make full utilisation of DaisyUI library
-- lowercase text, until absolutely necessary (e.g. proper nouns)
+- all sections wrapped in borders: `border-1 border-neutral rounded-sm`
+- danger zones use: `border-1 border-error`
+- consistent padding: `p-6` for main sections, `p-4` for cards
+- consistent spacing: `mb-4` for section spacing, `mb-6` for major sections
+
+**buttons:**
+
+- all buttons must include: `border-1 border-neutral`
+- primary buttons: `btn btn-primary font-raleway font-extrabold tracking-tighter lowercase border-1 border-neutral`
+- secondary buttons: `btn btn-secondary font-raleway font-extrabold tracking-tighter lowercase border-1 border-neutral`
+
+**badges:**
+
+- all badges must include: `border-1 border-neutral`
+- standard badge: `badge badge-secondary font-space tracking-normal lowercase border-1 border-neutral`
+- success badge: `badge badge-success font-space tracking-normal lowercase border-1 border-neutral`
+
+**design principles:**
+
+- no shadows or gradients
+- bento box style layout
+- full utilization of DaisyUI library
+- lowercase text for all interface elements
+- preserve user-generated content in original case
+- consistent visual hierarchy throughout
 
 **components:**
 
-- consistent naming: TypeComponentName.js... here are examples:
-	- SectionHero.js
-	- FormPublishLog.js
-	- ButtonLogout.js
-	- ButtonBilling.js
-- avoid repeating code and turn it into components
+- consistent naming: TypeComponentName.js
+- avoid code repetition - componentize reusable elements
+- all components follow design system patterns
 ## features
 
 ### mvp features to build and ship
@@ -360,6 +380,9 @@ commit data: [commit messages, files changed, pr titles]
 - `<main></main>` tags for displaying content on page
 - `<section></section>` tags for separating different content
 - react hot toast - to display alerts and messages
+- follow design system patterns from `/components/ui/` and `/app/design-system/page.js`
+- all components must use consistent typography, borders, and spacing
+- ESLint compliance required - run `npm run lint` to check
 
 ### security considerations
 
@@ -420,3 +443,74 @@ fetch('https://shipnotes.dev/api/widget/[company]')
 - fixed position bottom-right
 - clicking redirects to hosted change log
 - minimal css to avoid conflicts (text + SVG icon)
+
+## design system implementation status
+
+**✅ completed - fully implemented across all components**
+
+### updated components following design system:
+
+**UI Components (source of truth):**
+- `/components/ui/ConfirmModal.js` - modal structure and styling
+- `/components/ui/Typography.js` - typography patterns
+- `/components/ui/Button.js` - button styling patterns
+- `/components/ui/Badge.js` - badge styling patterns
+- `/components/ui/Card.js` - card layout patterns
+- `/components/ui/Input.js` - form input patterns
+- `/components/ui/Table.js` - table styling patterns
+- `/app/design-system/page.js` - complete component showcase
+
+**Layout Components:**
+- `/components/layout/Navbar.js` - navigation styling
+- `/components/layout/LogoutButton.js` - button consistency
+
+**Dashboard Components:**
+- `/components/dashboard/DashboardClient.js` - tabs, cards, typography
+- `/components/dashboard/CreateProjectModal.js` - proper modal structure
+- `/components/dashboard/RepositorySelector.js` - form consistency
+- `/components/dashboard/DashboardCredits.js` - layout and typography
+- `/app/dashboard/page.js` - page layout and stats section
+
+**Project Components:**
+- `/components/project/ProjectClient.js` - tabs and form elements
+- `/components/project/ReleaseNotesManager.js` - cards and buttons
+- `/components/project/CommitSelector.js` - list styling
+- `/components/project/ProjectSettings.js` - form styling
+- `/components/project/WidgetGenerator.js` - code blocks and buttons
+
+**Settings:**
+- `/app/settings/page.js` - complete page styling update
+
+### key patterns implemented:
+
+**Typography Hierarchy:**
+- Page headings: `font-raleway font-extrabold tracking-tighter text-4xl mb-2 lowercase`
+- Section headings: `font-raleway font-extrabold text-xl tracking-tighter mb-4 lowercase`
+- Body text: `font-lora tracking-wide opacity-80 text-neutral lowercase`
+- Technical text: `font-space tracking-normal text-sm opacity-60 text-neutral lowercase`
+
+**Border System:**
+- Standard sections: `border-1 border-neutral rounded-sm`
+- Error sections: `border-1 border-error rounded-sm`
+- All buttons include: `border-1 border-neutral`
+- All badges include: `border-1 border-neutral`
+
+**Component Consistency:**
+- DaisyUI tabs maintain their structure (no border changes)
+- Modal components use proper DaisyUI structure
+- Cards follow consistent padding (`p-4` for cards, `p-6` for sections)
+- Buttons use raleway font with extrabold weight
+- Badges use space mono font with normal tracking
+
+**Text Case Policy:**
+- Interface elements: lowercase
+- User-generated content: preserve original case
+- Proper nouns: preserve original case
+
+### development notes:
+
+- All linting issues resolved
+- ESLint compliance achieved
+- React hooks dependencies properly managed
+- Next.js Image optimization implemented
+- Design system is now the single source of truth for all styling decisions

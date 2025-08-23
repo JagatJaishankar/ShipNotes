@@ -2,28 +2,37 @@
 // Component for selecting commits to include in release notes
 import { useState } from "react";
 import Image from "next/image";
-import { Button, Table, TableHead, TableBody, TableRow, TableCell, TableHeader, Badge } from "@/components/ui";
+import {
+  Button,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableHeader,
+  Badge,
+} from "@/components/ui";
 
-export default function CommitSelector({ 
-  commits, 
-  selectedCommits, 
-  onCommitToggle, 
-  isLoading, 
+export default function CommitSelector({
+  commits,
+  selectedCommits,
+  onCommitToggle,
+  isLoading,
   onRefresh,
   publishedCommits = [], // Array of commit SHAs that are published
-  draftCommits = [] // Array of commit SHAs that are in drafts
+  draftCommits = [], // Array of commit SHAs that are in drafts
 }) {
   const [selectAll, setSelectAll] = useState(false);
 
   const handleSelectAll = () => {
     if (selectAll || selectedCommits.length === commits.length) {
       // Deselect all
-      selectedCommits.forEach(commit => onCommitToggle(commit));
+      selectedCommits.forEach((commit) => onCommitToggle(commit));
       setSelectAll(false);
     } else {
       // Select all unselected commits
-      commits.forEach(commit => {
-        const isSelected = selectedCommits.some(c => c.sha === commit.sha);
+      commits.forEach((commit) => {
+        const isSelected = selectedCommits.some((c) => c.sha === commit.sha);
         if (!isSelected) {
           onCommitToggle(commit);
         }
@@ -33,26 +42,38 @@ export default function CommitSelector({
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
   const isCommitSelected = (commit) => {
-    return selectedCommits.some(c => c.sha === commit.sha);
+    return selectedCommits.some((c) => c.sha === commit.sha);
   };
 
   const getCommitStatus = (commit) => {
     if (publishedCommits.includes(commit.sha)) {
-      return <Badge variant="success" size="sm">published</Badge>;
+      return (
+        <Badge variant="primary" size="sm">
+          published
+        </Badge>
+      );
     }
     if (draftCommits.includes(commit.sha)) {
-      return <Badge variant="warning" size="sm">draft</Badge>;
+      return (
+        <Badge variant="secondary" size="sm">
+          draft
+        </Badge>
+      );
     }
-    return <Badge variant="default" size="sm">unused</Badge>;
+    return (
+      <Badge variant="default" size="sm">
+        unused
+      </Badge>
+    );
   };
 
   if (isLoading) {
@@ -67,15 +88,14 @@ export default function CommitSelector({
     return (
       <div className="text-center py-16">
         <div className="text-6xl opacity-50 mb-4">📝</div>
-        <h3 className="font-raleway font-bold tracking-tighter text-xl lowercase opacity-70 mb-2">no commits found</h3>
+        <h3 className="font-raleway font-bold tracking-tighter text-xl lowercase opacity-70 mb-2">
+          no commits found
+        </h3>
         <p className="font-lora tracking-wide opacity-80 text-neutral lowercase mb-4 max-w-md mx-auto">
-          no commits found in the selected time range. try expanding your date range or check if there are recent commits.
+          no commits found in the selected time range. try expanding your date
+          range or check if there are recent commits.
         </p>
-        <Button
-          onClick={onRefresh}
-          variant="outline"
-          size="sm"
-        >
+        <Button onClick={onRefresh} variant="outline" size="sm">
           refresh commits
         </Button>
       </div>
@@ -110,7 +130,9 @@ export default function CommitSelector({
                 key={commit.sha}
                 clickable
                 onClick={() => onCommitToggle(commit)}
-                className={isCommitSelected(commit) ? "bg-primary bg-opacity-10" : ""}
+                className={
+                  isCommitSelected(commit) ? "bg-primary bg-opacity-10" : ""
+                }
               >
                 <TableCell>
                   <input
@@ -124,10 +146,11 @@ export default function CommitSelector({
                 <TableCell>
                   <div className="max-w-sm">
                     <p className="font-lora tracking-wide text-neutral font-medium mb-1">
-                      {commit.message.split('\n')[0]} {/* First line only - keep original case */}
+                      {commit.message.split("\n")[0]}{" "}
+                      {/* First line only - keep original case */}
                     </p>
                     {/* Full commit message if multi-line */}
-                    {commit.message.split('\n').length > 1 && (
+                    {commit.message.split("\n").length > 1 && (
                       <details className="mt-1">
                         <summary className="font-space tracking-normal text-xs opacity-60 cursor-pointer lowercase">
                           show full message
@@ -149,17 +172,23 @@ export default function CommitSelector({
                         height={24}
                         className="w-6 h-6 rounded-sm border-1 border-neutral object-cover"
                         onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.nextSibling.style.display = 'flex';
+                          e.target.style.display = "none";
+                          e.target.nextSibling.style.display = "flex";
                         }}
                       />
                     ) : (
                       <div className="bg-neutral text-neutral-content rounded-sm w-6 h-6 text-xs border-1 border-neutral flex items-center justify-center">
-                        <span>{commit.author.name.split(' ')[0].charAt(0).toUpperCase()}</span>
+                        <span>
+                          {commit.author.name
+                            .split(" ")[0]
+                            .charAt(0)
+                            .toUpperCase()}
+                        </span>
                       </div>
                     )}
                     <span className="font-space tracking-normal opacity-80 text-sm">
-                      {commit.author.name.split(' ')[0]} {/* Show only first name */}
+                      {commit.author.name.split(" ")[0]}{" "}
+                      {/* Show only first name */}
                     </span>
                   </div>
                 </TableCell>
@@ -179,9 +208,7 @@ export default function CommitSelector({
                     {commit.sha.substring(0, 7)}
                   </a>
                 </TableCell>
-                <TableCell>
-                  {getCommitStatus(commit)}
-                </TableCell>
+                <TableCell>{getCommitStatus(commit)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

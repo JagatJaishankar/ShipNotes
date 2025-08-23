@@ -6,8 +6,8 @@ import { Button, Select, TextArea } from "@/components/ui";
 
 export default function WidgetGenerator({ project, hasPublishedNotes }) {
   const [config, setConfig] = useState({
-    position: 'bottom-right',
-    theme: 'light',
+    position: "bottom-right",
+    theme: "light",
     showCount: true,
     days: 30,
   });
@@ -16,10 +16,10 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
 
   // Generate embed code
   const generateEmbedCode = () => {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://shipnotes.dev';
-    
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shipnotes.dev";
+
     return `<!-- ShipNotes.dev Widget -->
-<script 
+<script
   src="${baseUrl}/widget.js"
   data-shipnotes-project="${project.projectSlug}"
   data-position="${config.position}"
@@ -33,19 +33,29 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
   // Generate HTML preview
   const generatePreview = () => {
     const positions = {
-      'bottom-right': 'bottom: 20px; right: 20px;',
-      'bottom-left': 'bottom: 20px; left: 20px;',
-      'top-right': 'top: 20px; right: 20px;',
-      'top-left': 'top: 20px; left: 20px;'
+      "bottom-right": "bottom: 20px; right: 20px;",
+      "bottom-left": "bottom: 20px; left: 20px;",
+      "top-right": "top: 20px; right: 20px;",
+      "top-left": "top: 20px; left: 20px;",
     };
 
     const themes = {
-      light: { bg: '#ffffff', text: '#374151', border: '#e5e7eb', accent: '#3b82f6' },
-      dark: { bg: '#1f2937', text: '#f9fafb', border: '#374151', accent: '#60a5fa' }
+      light: {
+        bg: "#ffffff",
+        text: "#374151",
+        border: "#e5e7eb",
+        accent: "#3b82f6",
+      },
+      dark: {
+        bg: "#1f2937",
+        text: "#f9fafb",
+        border: "#374151",
+        accent: "#60a5fa",
+      },
     };
 
     const themeColors = themes[config.theme];
-    const countText = config.showCount ? '2 new updates' : 'New updates';
+    const countText = config.showCount ? "2 new updates" : "New updates";
 
     return `
       <div style="
@@ -100,11 +110,11 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
       // Fallback for older browsers
-      const textArea = document.createElement('textarea');
+      const textArea = document.createElement("textarea");
       textArea.value = generateEmbedCode();
       document.body.appendChild(textArea);
       textArea.select();
-      document.execCommand('copy');
+      document.execCommand("copy");
       document.body.removeChild(textArea);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -120,9 +130,12 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
         <div className="bg-base-200 rounded-sm p-4 border border-neutral">
           <div className="text-center py-8">
             <div className="text-6xl opacity-50 mb-4">📱</div>
-            <h3 className="font-raleway font-bold tracking-tighter text-lg lowercase opacity-70 mb-2">no published notes yet</h3>
+            <h3 className="font-raleway font-bold tracking-tighter text-lg lowercase opacity-70 mb-2">
+              no published notes yet
+            </h3>
             <p className="font-lora tracking-wide opacity-80 text-neutral lowercase mb-3">
-              publish your first release note to generate widget code for your website.
+              publish your first release note to generate widget code for your
+              website.
             </p>
             <p className="font-space tracking-normal text-sm opacity-60 text-neutral lowercase">
               the widget will automatically show new updates to your customers.
@@ -135,7 +148,7 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-4">
         <h2 className="font-raleway font-bold text-xl tracking-tighter lowercase">
           widget integration
         </h2>
@@ -144,11 +157,11 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
           variant="outline"
           size="sm"
         >
-          {showPreview ? 'hide preview' : 'show preview'}
+          {showPreview ? "hide preview" : "show preview"}
         </Button>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Configuration Options */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Position */}
@@ -158,7 +171,9 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
             </label>
             <Select
               value={config.position}
-              onChange={(e) => setConfig({ ...config, position: e.target.value })}
+              onChange={(e) =>
+                setConfig({ ...config, position: e.target.value })
+              }
             >
               <option value="bottom-right">bottom right</option>
               <option value="bottom-left">bottom left</option>
@@ -191,7 +206,9 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
                 <input
                   type="checkbox"
                   checked={config.showCount}
-                  onChange={(e) => setConfig({ ...config, showCount: e.target.checked })}
+                  onChange={(e) =>
+                    setConfig({ ...config, showCount: e.target.checked })
+                  }
                   className="checkbox checkbox-primary"
                 />
                 <span className="font-lora tracking-wide opacity-80 text-neutral text-sm lowercase">
@@ -208,7 +225,9 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
             </label>
             <Select
               value={config.days}
-              onChange={(e) => setConfig({ ...config, days: parseInt(e.target.value) })}
+              onChange={(e) =>
+                setConfig({ ...config, days: parseInt(e.target.value) })
+              }
             >
               <option value={7}>7 days</option>
               <option value={14}>14 days</option>
@@ -222,8 +241,10 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
         {/* Preview */}
         {showPreview && (
           <div className="bg-base-200 rounded-sm p-6 border border-neutral relative min-h-32">
-            <h3 className="font-raleway font-bold tracking-tighter mb-4 lowercase">preview</h3>
-            <div 
+            <h3 className="font-raleway font-bold tracking-tighter mb-4 lowercase">
+              preview
+            </h3>
+            <div
               className="relative"
               dangerouslySetInnerHTML={{ __html: generatePreview() }}
             />
@@ -241,10 +262,10 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
             </label>
             <Button
               onClick={copyToClipboard}
-              variant={copied ? 'success' : 'primary'}
+              variant={copied ? "success" : "primary"}
               size="sm"
             >
-              {copied ? 'copied!' : 'copy code'}
+              {copied ? "copied!" : "copy code"}
             </Button>
           </div>
           <TextArea
@@ -262,13 +283,21 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
           </h3>
           <ol className="space-y-2 font-lora tracking-wide opacity-80 text-neutral text-sm lowercase">
             <li>1. copy the embed code above</li>
-            <li>2. paste it before the closing &lt;/body&gt; tag in your website</li>
-            <li>3. the widget will automatically show when you publish new release notes</li>
-            <li>4. customers can click the widget to view your full changelog</li>
+            <li>
+              2. paste it before the closing &lt;/body&gt; tag in your website
+            </li>
+            <li>
+              3. the widget will automatically show when you publish new release
+              notes
+            </li>
+            <li>
+              4. customers can click the widget to view your full changelog
+            </li>
           </ol>
           <div className="mt-4 p-3 bg-primary/10 rounded border border-primary/20">
             <p className="font-space tracking-normal text-sm text-primary lowercase">
-              💡 tip: the widget only appears when you have recent updates, keeping your site clean.
+              💡 tip: the widget only appears when you have recent updates,
+              keeping your site clean.
             </p>
           </div>
         </div>
@@ -279,9 +308,26 @@ export default function WidgetGenerator({ project, hasPublishedNotes }) {
             testing your widget
           </h3>
           <div className="space-y-2 font-lora tracking-wide opacity-80 text-neutral text-sm lowercase">
-            <p>• widget api: <code className="font-space bg-base-200 px-1 rounded border-1 border-neutral">GET /api/widget/{project.projectSlug}</code></p>
-            <p>• public changelog: <Link href={`/${project.projectSlug}`} target="_blank" className="link link-primary">shipnotes.dev/{project.projectSlug}</Link></p>
-            <p>• the widget will appear on your site within 5 minutes of publishing updates</p>
+            <p>
+              • widget api:{" "}
+              <code className="font-space bg-base-200 px-1 rounded border-1 border-neutral">
+                GET /api/widget/{project.projectSlug}
+              </code>
+            </p>
+            <p>
+              • public changelog:{" "}
+              <Link
+                href={`/${project.projectSlug}`}
+                target="_blank"
+                className="link link-primary"
+              >
+                shipnotes.dev/{project.projectSlug}
+              </Link>
+            </p>
+            <p>
+              • the widget will appear on your site within 5 minutes of
+              publishing updates
+            </p>
           </div>
         </div>
       </div>

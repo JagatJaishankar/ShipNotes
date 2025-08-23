@@ -2,6 +2,7 @@
 // Reference file for all UI components with enhanced styling
 "use client";
 import React, { useState } from "react";
+import Image from "next/image";
 
 // =============================================================================
 // TYPOGRAPHY COMPONENTS
@@ -686,7 +687,13 @@ const Avatar = ({
     <div className={`avatar ${className}`}>
       <div className={`${sizes[size]} rounded-full bg-base-300 flex items-center justify-center overflow-hidden`}>
         {src ? (
-          <img src={src} alt={alt} className="w-full h-full object-cover" />
+          <Image 
+            src={src} 
+            alt={alt} 
+            width={100}
+            height={100}
+            className="w-full h-full object-cover" 
+          />
         ) : (
           <span className="font-raleway font-bold tracking-tighter opacity-60">
             {fallback || alt.charAt(0).toUpperCase()}
@@ -875,7 +882,7 @@ class ErrorBoundary extends React.Component {
             <div className="text-6xl">💥</div>
             <Heading3 className="text-error">Something went wrong</Heading3>
             <BodyText>
-              A component crashed. Our team has been notified and we're working on a fix.
+              A component crashed. Our team has been notified and we&apos;re working on a fix.
             </BodyText>
             {process.env.NODE_ENV === 'development' && (
               <details className="text-left mt-4">

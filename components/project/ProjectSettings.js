@@ -5,7 +5,11 @@ import axios from "axios";
 import { toasts, showError, showLoading, dismissToast } from "@/lib/toast";
 import { ConfirmModal, Button, Input, TextArea } from "@/components/ui";
 
-export default function ProjectSettings({ project, onProjectUpdate, onProjectDelete }) {
+export default function ProjectSettings({
+  project,
+  onProjectUpdate,
+  onProjectDelete,
+}) {
   const [isEditing, setIsEditing] = useState({
     name: false,
     repository: false,
@@ -22,7 +26,7 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
   const [deleting, setDeleting] = useState(false);
 
   const handleUpdate = async (field) => {
-    if (!formData[field] && field !== 'description') {
+    if (!formData[field] && field !== "description") {
       showError(`${field} cannot be empty`);
       return;
     }
@@ -32,25 +36,28 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
 
     try {
       const updateData = {};
-      
-      if (field === 'projectName') {
+
+      if (field === "projectName") {
         updateData.projectName = formData.projectName;
-      } else if (field === 'repository') {
+      } else if (field === "repository") {
         updateData.repository = formData.repository;
         updateData.repositoryUrl = formData.repositoryUrl;
-      } else if (field === 'description') {
+      } else if (field === "description") {
         updateData.description = formData.description;
       }
 
-      const response = await axios.put(`/api/projects/${project._id}`, updateData);
-      
+      const response = await axios.put(
+        `/api/projects/${project._id}`,
+        updateData,
+      );
+
       dismissToast(loadingToast);
       toasts.projectCreated("project updated");
-      
+
       if (onProjectUpdate) {
         onProjectUpdate(response.data.project);
       }
-      
+
       setIsEditing({ ...isEditing, [field]: false });
     } catch (error) {
       dismissToast(loadingToast);
@@ -73,10 +80,10 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
 
     try {
       await axios.delete(`/api/projects/${project._id}`);
-      
+
       dismissToast(loadingToast);
       toasts.draftDeleted();
-      
+
       if (onProjectDelete) {
         onProjectDelete();
       }
@@ -91,7 +98,7 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
 
   const copyChangelogLink = async () => {
     const changelogUrl = `${window.location.origin}/${project.projectSlug}`;
-    
+
     try {
       await navigator.clipboard.writeText(changelogUrl);
       toasts.copied();
@@ -101,11 +108,13 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Project Name */}
       <div className="border border-neutral rounded-sm p-4">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="font-raleway font-bold tracking-tighter lowercase">project name</h3>
+          <h3 className="font-raleway font-bold tracking-tighter lowercase">
+            project name
+          </h3>
           {!isEditing.name && (
             <Button
               onClick={() => setIsEditing({ ...isEditing, name: true })}
@@ -117,23 +126,30 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
             </Button>
           )}
         </div>
-        
+
         {isEditing.name ? (
           <div className="space-y-3">
             <Input
               type="text"
               value={formData.projectName}
-              onChange={(e) => setFormData({ ...formData, projectName: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, projectName: e.target.value })
+              }
               disabled={updating}
             />
             {formData.projectName && (
               <p className="font-space text-xs opacity-60 lowercase">
-                url: shipnotes.dev/{formData.projectName.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "")}
+                url: shipnotes.dev/
+                {formData.projectName
+                  .toLowerCase()
+                  .replace(/[^a-z0-9]/g, "-")
+                  .replace(/-+/g, "-")
+                  .replace(/^-|-$/g, "")}
               </p>
             )}
             <div className="flex space-x-2">
               <Button
-                onClick={() => handleUpdate('projectName')}
+                onClick={() => handleUpdate("projectName")}
                 disabled={updating}
                 variant="primary"
                 size="sm"
@@ -143,7 +159,10 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
               <Button
                 onClick={() => {
                   setIsEditing({ ...isEditing, name: false });
-                  setFormData({ ...formData, projectName: project.projectName });
+                  setFormData({
+                    ...formData,
+                    projectName: project.projectName,
+                  });
                 }}
                 disabled={updating}
                 variant="ghost"
@@ -155,7 +174,9 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
           </div>
         ) : (
           <div>
-            <p className="font-lora tracking-wide">{project.projectName} {/* Keep user content in original case */}</p>
+            <p className="font-lora tracking-wide">
+              {project.projectName} {/* Keep user content in original case */}
+            </p>
             <p className="font-space text-xs opacity-60 mt-1 lowercase">
               url: shipnotes.dev/{project.projectSlug}
             </p>
@@ -166,7 +187,9 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
       {/* Repository */}
       <div className="border border-neutral rounded-sm p-4">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="font-raleway font-bold tracking-tighter lowercase">repository</h3>
+          <h3 className="font-raleway font-bold tracking-tighter lowercase">
+            repository
+          </h3>
           {!isEditing.repository && (
             <Button
               onClick={() => setIsEditing({ ...isEditing, repository: true })}
@@ -178,17 +201,17 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
             </Button>
           )}
         </div>
-        
+
         {isEditing.repository ? (
           <div className="space-y-3">
             <Input
               type="text"
               value={formData.repository}
               onChange={(e) => {
-                setFormData({ 
-                  ...formData, 
+                setFormData({
+                  ...formData,
                   repository: e.target.value,
-                  repositoryUrl: `https://github.com/${e.target.value}`
+                  repositoryUrl: `https://github.com/${e.target.value}`,
                 });
               }}
               placeholder="owner/repository"
@@ -197,7 +220,7 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
             />
             <div className="flex space-x-2">
               <Button
-                onClick={() => handleUpdate('repository')}
+                onClick={() => handleUpdate("repository")}
                 disabled={updating}
                 variant="primary"
                 size="sm"
@@ -207,8 +230,8 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
               <Button
                 onClick={() => {
                   setIsEditing({ ...isEditing, repository: false });
-                  setFormData({ 
-                    ...formData, 
+                  setFormData({
+                    ...formData,
                     repository: project.repository,
                     repositoryUrl: project.repositoryUrl,
                   });
@@ -224,7 +247,9 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
         ) : (
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-space tracking-normal">{project.repository} {/* Keep user content in original case */}</p>
+              <p className="font-space tracking-normal">
+                {project.repository} {/* Keep user content in original case */}
+              </p>
               <a
                 href={project.repositoryUrl}
                 target="_blank"
@@ -241,7 +266,9 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
       {/* Description */}
       <div className="border border-neutral rounded-sm p-4">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="font-raleway font-bold tracking-tighter lowercase">description</h3>
+          <h3 className="font-raleway font-bold tracking-tighter lowercase">
+            description
+          </h3>
           {!isEditing.description && (
             <Button
               onClick={() => setIsEditing({ ...isEditing, description: true })}
@@ -253,19 +280,21 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
             </Button>
           )}
         </div>
-        
+
         {isEditing.description ? (
           <div className="space-y-3">
             <TextArea
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
               placeholder="optional project description"
               rows={3}
               disabled={updating}
             />
             <div className="flex space-x-2">
               <Button
-                onClick={() => handleUpdate('description')}
+                onClick={() => handleUpdate("description")}
                 disabled={updating}
                 variant="primary"
                 size="sm"
@@ -275,7 +304,10 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
               <Button
                 onClick={() => {
                   setIsEditing({ ...isEditing, description: false });
-                  setFormData({ ...formData, description: project.description || "" });
+                  setFormData({
+                    ...formData,
+                    description: project.description || "",
+                  });
                 }}
                 disabled={updating}
                 variant="ghost"
@@ -287,20 +319,21 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
           </div>
         ) : (
           <p className="font-lora tracking-wide opacity-80">
-            {project.description || <span className="lowercase">no description</span>} {/* Keep user content in original case */}
+            {project.description || (
+              <span className="lowercase">no description</span>
+            )}{" "}
+            {/* Keep user content in original case */}
           </p>
         )}
       </div>
 
       {/* Quick Actions */}
       <div className="border border-neutral rounded-sm p-4">
-        <h3 className="font-raleway font-bold tracking-tighter mb-3 lowercase">quick actions</h3>
+        <h3 className="font-raleway font-bold tracking-tighter mb-3 lowercase">
+          quick actions
+        </h3>
         <div className="flex flex-wrap gap-2">
-          <Button
-            onClick={copyChangelogLink}
-            variant="secondary"
-            size="sm"
-          >
+          <Button onClick={copyChangelogLink} variant="secondary" size="sm">
             copy changelog link
           </Button>
           <a
@@ -316,10 +349,13 @@ export default function ProjectSettings({ project, onProjectUpdate, onProjectDel
 
       {/* Danger Zone */}
       <div className="border border-error rounded-sm p-4">
-        <h3 className="font-raleway font-bold tracking-tighter text-error mb-3 lowercase">danger zone</h3>
+        <h3 className="font-raleway font-bold tracking-tighter text-error mb-3 lowercase">
+          danger zone
+        </h3>
         <div>
           <p className="font-lora tracking-wide text-sm opacity-80 mb-3 lowercase">
-            delete this project and all associated release notes. this action cannot be undone.
+            delete this project and all associated release notes. this action
+            cannot be undone.
           </p>
           <Button
             onClick={() => setShowDeleteModal(true)}

@@ -50,16 +50,6 @@ export default function Navbar({ session }) {
                 </li>
                 <li>
                   <a
-                    href="https://github.com/anthropics/claude-code/issues"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="lowercase"
-                  >
-                    support
-                  </a>
-                </li>
-                <li>
-                  <a
                     href="https://shipnotes.dev"
                     target="_blank"
                     rel="noopener noreferrer"

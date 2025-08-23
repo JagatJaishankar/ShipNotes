@@ -43,20 +43,11 @@ export default async function ProjectPage({ params }) {
     <main className="min-h-screen bg-base-100 p-6">
       <Navbar session={session} />
 
-      <section className="border border-neutral rounded-sm p-6 max-w-6xl mx-auto">
+      <section className="max-w-5xl mx-auto mt-4">
         {/* Project Header */}
         <div className="mb-6">
-          <div className="flex items-center space-x-4 mb-4">
-            <Link
-              href="/dashboard"
-              className="btn btn-ghost btn-sm font-raleway font-extrabold tracking-tighter lowercase"
-            >
-              ← back to dashboard
-            </Link>
-          </div>
-
-          <div className="flex justify-between items-start">
-            <div>
+          <div className="flex justify-baseline">
+            <div className="flex-2/3">
               <h1 className="font-raleway font-black tracking-tighter text-4xl lowercase">
                 {project.projectName}
               </h1>
@@ -70,12 +61,12 @@ export default async function ProjectPage({ params }) {
               )}
             </div>
 
-            <div className="flex space-x-2">
+            <div className="flex-1/3 space-x-2 text-end">
               <a
                 href={project.repositoryUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-outline btn-sm font-raleway font-extrabold tracking-tighter lowercase border-1"
+                className="btn btn-outline font-raleway font-extrabold tracking-tighter lowercase border-1"
               >
                 view on github
               </a>
@@ -83,7 +74,7 @@ export default async function ProjectPage({ params }) {
                 href={`/${project.projectSlug}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-secondary btn-sm font-raleway font-extrabold tracking-tighter lowercase border-1 border-neutral"
+                className="btn btn-primary font-raleway font-extrabold tracking-tighter lowercase border-1 border-neutral"
               >
                 view changelog
               </Link>
