@@ -118,15 +118,14 @@ small stuff, but it adds up. keep the feedback coming!`,
         <div className="font-space tracking-normal text-sm opacity-60 mb-2 lowercase">
           i built this because...
         </div>
-        <h1 className="font-raleway font-extrabold text-4xl tracking-tighter leading-none mb-2 lowercase">
-          writing release notes
-          <br className="sm:hidden" /> is a pain.
-          <br />
-          but customers need them.
+        <h1 className="font-raleway font-extrabold text-4xl max-sm:text-3xl tracking-tighter leading-none mb-2 lowercase">
+          writing release notes is a pain. <br className="max-sm:hidden" />
+          but customers
+          <br className="sm:hidden" /> need them.
         </h1>
-        <div className="font-lora text-lg tracking-wide opacity-80 mb-8 lowercase">
+        <div className="font-lora text-lg max-sm:text-base tracking-wide opacity-80 mb-8 lowercase">
           just connect your github. <br className="sm:hidden" />
-          we&apos;ll turn your commits into customer-friendly updates.
+          we&apos;ll turn your commits into customer friendly updates.
         </div>
         <a href="#pricing">
           <button className="btn btn-primary font-raleway font-extrabold text-lg tracking-tighter lowercase border-1 border-neutral">

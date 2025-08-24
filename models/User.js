@@ -28,7 +28,7 @@ const UserSchema = new mongoose.Schema(
     },
     credits: {
       type: Number,
-      default: 20, // 20 total credits, 5 free generations (out of 20)
+      default: 5, // 20 total credits, 5 free generations (out of 20)
       min: 0,
     },
     isProUser: {
@@ -38,7 +38,7 @@ const UserSchema = new mongoose.Schema(
   },
   {
     timestamps: true, // Adds createdAt and updatedAt
-  }
+  },
 );
 
 // Indexes are automatically created by unique: true fields
