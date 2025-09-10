@@ -389,7 +389,7 @@ const PitchDeck = () => {
       <div className="space-y-12">
         <div className="text-center">
           <h2 className="font-raleway font-extrabold tracking-tighter text-4xl lowercase mb-4">
-            why we'll win
+            why we&apos;ll win
           </h2>
         </div>
         
@@ -506,7 +506,7 @@ const PitchDeck = () => {
       <div className="flex flex-col items-center justify-center text-center space-y-12">
         <div className="space-y-6">
           <h1 className="font-raleway font-extrabold tracking-tighter text-5xl md:text-6xl lowercase">
-            let's build together
+            let&apos;s build together
           </h1>
         </div>
         
