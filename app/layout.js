@@ -106,7 +106,8 @@ export default function RootLayout({ children }) {
           }}
         />
 
-        {/* ShipNotes.dev Widget */}
+        {/* ShipNotes.dev Widget - Temporarily disabled during development */}
+        {/* 
         <script
           src="https://shipnotes.dev/widget.js"
           data-shipnotes-project="shipnotes"
@@ -116,6 +117,7 @@ export default function RootLayout({ children }) {
           data-days="30"
           async
         ></script>
+        */}
       </body>
     </html>
   );
