@@ -33,6 +33,7 @@
 | Database | NoSQL / MongoDB |
 | Auth | NextAuth.js (w/ GitHub OAuth) |
 | Payments | None (Free to Use) |
+| AI / LLM | OpenAI API (ChatGPT) |
 | Deployment | Vercel |
 
 ## Live Demo
