@@ -1,4 +1,4 @@
-# 🚀 Project Name
+# ShipNotes
 
 > AI‑powered release notes that turn messy GitHub commits into clear, customer‑friendly product updates.
 
